@@ -1,42 +1,37 @@
-# plexkodijellyfinsync
+![Plex Kodi Jellyfin Sync banner](assets/banner.svg)
 
-**Sync watch progress between Plex, Kodi and Jellyfin**  
+# Plex Kodi Jellyfin Sync
 
-This Docker container runs a Python script that automatically synchronizes movie resume positions and watch status between a Plex media server and a Kodi client. It ensures your viewing progress stays consistent whether you watch on Plex or Kodi. By default, it runs the plexkodisync.py script every 900 seconds (can be adjusted by editing the sleep time in seconds inside entrypoint.sh inside the container)
+Sync movie and TV playback progress and watched status among **Plex, Kodi, and Jellyfin**. The container runs a periodic sync every 15 minutes and serves the existing Flask dashboard, webhook, status, and tracker pages on port 5000.
 
-Plex webhook (Plex Premium Feature): copy the http://ipaddress:5000/plex to Plex Webhook in settings to have it sync automatically when using a Plex client.
+![Sync icon](assets/icon.svg) Plex, Kodi, and Jellyfin use the same media files. The sync script matches items by relative media path, compares each platform against its previous snapshot, and applies a single detected change to the others. Conflicting changes are reported and left for review. On Deck / Up Next is reserved for unwatched TV episodes; an unwatched movie is not labeled Up Next.
 
-WebUI with sync, reset, status and tracker endpoints @ http://ipaddress:5000/
+## Connections
 
-------
+| Platform | Authentication and read/write methods |
+| --- | --- |
+| Plex | Server URL and `PLEX_TOKEN`; PlexAPI reads library items and On Deck, with Plex progress endpoints for updates. |
+| Kodi | MariaDB credentials for video items and bookmarks, plus authenticated JSON-RPC for the Kodi WebUI. |
+| Jellyfin | Server URL and `JELLYFIN_TOKEN` / `JELLYFIN_USER_ID`; an invalid token can be refreshed with `JELLYFIN_USER` and `JELLYFIN_PW`. Jellyfin user item and user-data endpoints read and update playback state. |
 
-## Features
+All setting names remain in [`app/config/.env-template`](app/config/.env-template). Copy it to a host-mounted `/config/.env`, fill in your own credentials, and set the three media roots so the same file resolves to the same relative path on each platform. Keep `/config/.env` and the state JSON out of Git.
 
-- Connects to Plex, Kodi and Jellyfin via API and database
-- Syncs watch/unwatch status between platforms, resume points and up next.
-- Supports multiple Plex movie libraries (option to exlude unwanted libraries in .env)
-- Runs periodically (every 15 mins), on demand, or via webhook (plex only) to keep sync up to date
-- Logs sync activity for easy debugging
+## Docker Compose
 
----
+Edit the host paths in [`docker-compose.yml`](docker-compose.yml), then run:
 
-## Requirements
+```sh
+docker compose up -d
+docker logs -f plexkodijellyfinsync
+```
 
-- Plex Media Server with API access token
-- Kodi with JSON-RPC (webui) enabled and accessible (I use a headless-kodi container)
-- Access to Kodi's MariaDB (MySQL) database (used for multiple client syncs)
-- Jellyfin Server with necessary tokens.
-- Docker (for container usage)
+The example Compose file mounts host `/app`, `/config`, and `/scripts` directories. The entrypoint copies default scripts only if `/scripts` is empty. **When upgrading an existing installation, copy the entry point and all five `sync_*.py` modules from `app/scripts/` together to your host-mounted `/scripts`; a new image alone will not overwrite an existing scripts mount.** Preserve your own `/config/.env` and `/config/.last_sync_state.json`.
 
----
+The existing Flask server exposes `/`, `/plex`, `/sync`, `/cachereset`, `/status`, and `/tracker`. Configure the Plex webhook to point to the container's reachable `http://YOUR_HOST:5000/plex` address if you use Plex webhooks. The other pages and endpoints retain their existing behavior and authentication settings.
 
-## Setup Instructions
+## Notes
 
-1. **Modify the `/config/.env` file**
-
-   There will be a .env-template file you can use to build the .env inside 
-   the /config/ folder on your docker host. Option available to use
-   /config/setup.py from inside the container to populate .env file.   
-   
-**If you want to view what logs from the container, run from host terminal: 
-sudo docker logs -f plexkodijellyfinsync
+- The Rich console output retains the connection messages, On Deck / Next Up, each platform's Continue Watching or In Progress table, comparison, and results.
+- Sync state is stored at `SYNC_STATE_FILE` (normally `/config/.last_sync_state.json`).
+- The source here excludes private `.env` files and runtime logs; the template retains the original key names.
+- See [LICENSE](LICENSE) for the MIT license. Plex, Kodi, and Jellyfin names and logos belong to their respective owners; this independent project is not affiliated with them.

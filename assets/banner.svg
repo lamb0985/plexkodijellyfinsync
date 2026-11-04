@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="320" viewBox="0 0 1200 320" role="img" aria-labelledby="title desc">
+  <title id="title">Plex Kodi Jellyfin Sync</title>
+  <desc id="desc">Plex, Kodi, and Jellyfin symbols joined by sync arrows over a dark background.</desc>
+  <defs>
+    <linearGradient id="bg" x2="1" y2="1">
+      <stop stop-color="#0c1423"/><stop offset=".54" stop-color="#111b2b"/><stop offset="1" stop-color="#171331"/>
+    </linearGradient>
+    <radialGradient id="glow"><stop stop-color="#3e5278" stop-opacity=".42"/><stop offset="1" stop-color="#3e5278" stop-opacity="0"/></radialGradient>
+    <linearGradient id="track"><stop stop-color="#eab33a"/><stop offset=".5" stop-color="#42b3ed"/><stop offset="1" stop-color="#aa83ef"/></linearGradient>
+    <filter id="shadow" x="-.4" y="-.4" width="1.8" height="1.8"><feDropShadow dx="0" dy="10" stdDeviation="12" flood-color="#030713" flood-opacity=".45"/></filter>
+  </defs>
+  <rect width="1200" height="320" rx="24" fill="url(#bg)"/>
+  <circle cx="180" cy="30" r="270" fill="url(#glow)"/>
+  <circle cx="1040" cy="290" r="220" fill="url(#glow)"/>
+  <g opacity=".2" stroke="#536987" stroke-width="1"><path d="M0 280H1200M0 40H1200"/></g>
+
+  <g transform="translate(58 47)">
+    <rect width="236" height="42" rx="21" fill="#223148" stroke="#54647b" stroke-opacity=".5"/>
+    <circle cx="21" cy="21" r="6" fill="#48c99f"/>
+    <text x="37" y="27" fill="#dbe5f3" font-family="DejaVu Sans,Arial,sans-serif" font-size="14" font-weight="700" letter-spacing="1.2">THREE-WAY SYNC</text>
+  </g>
+  <text x="58" y="151" fill="#f6f8fc" font-family="DejaVu Sans,Arial,sans-serif" font-size="47" font-weight="750">Plex Kodi Jellyfin</text>
+  <text x="58" y="193" fill="#8fb0d5" font-family="DejaVu Sans,Arial,sans-serif" font-size="23" font-weight="500">One watch state, wherever you press play.</text>
+  <g font-family="DejaVu Sans,Arial,sans-serif" font-size="16" fill="#a9bad2">
+    <text x="58" y="259">Resume progress</text><circle cx="215" cy="254" r="3" fill="#68d2ad"/>
+    <text x="234" y="259">Watched status</text><circle cx="379" cy="254" r="3" fill="#68d2ad"/>
+    <text x="398" y="259">TV up next</text>
+  </g>
+
+  <g filter="url(#shadow)">
+    <path d="M778 140h50M952 140h49" stroke="url(#track)" stroke-width="5" stroke-linecap="round"/>
+    <path d="m823 134 7 6-7 6m174-12 7 6-7 6" fill="none" stroke="#a8bad5" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M1003 211H953M829 211h-50" stroke="#657d9f" stroke-width="3" stroke-linecap="round"/>
+    <path d="m958 205-7 6 7 6m-174-12-7 6 7 6" fill="none" stroke="#657d9f" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="733" cy="175" r="55" fill="#1d2a3b" stroke="#bd892e" stroke-width="2"/>
+    <circle cx="904" cy="175" r="55" fill="#192f45" stroke="#2987b8" stroke-width="2"/>
+    <circle cx="1075" cy="175" r="55" fill="#272545" stroke="#8562ca" stroke-width="2"/>
+  </g>
+  <!-- Simple, original marks evoke the three platforms without embedding external images. -->
+  <path d="M719 147h17l18 28-18 28h-17l18-28Z" fill="#e8b340"/>
+  <g fill="#55b9ec"><path d="m894 145 13-13 13 13-13 13Z"/><path d="m872 170 13-13 13 13-13 13Z"/><path d="m916 170 13-13 13 13-13 13Z"/><path d="m894 195 13-13 13 13-13 13Z"/></g>
+  <g fill="none" stroke="#ae8cf2" stroke-width="6" stroke-linejoin="round"><path d="m1075 143 24 42h-48Z"/><path d="m1075 157 16 28h-32Z"/></g>
+  <g font-family="DejaVu Sans,Arial,sans-serif" font-size="14" font-weight="700" letter-spacing="2.5" text-anchor="middle">
+    <text x="733" y="263" fill="#e8b340">PLEX</text>
+    <text x="904" y="263" fill="#55b9ec">KODI</text>
+    <text x="1075" y="263" fill="#ae8cf2">JELLYFIN</text>
+  </g>
+</svg>

@@ -235,7 +235,7 @@
             return `${mins}:${secs.toString().padStart(2, '0')}`;
         }
 
-        function generatePlatformWidget(platformData, type) {
+        function generatePlatformWidget(platformData, type, isEpisode) {
             if (!platformData) {
                 return `
                     <div class="platform-badge badge-${type}">
@@ -246,11 +246,14 @@
 
             const isUnwatched = platformData.status === "unwatched" || !platformData.resume;
             const pct = isUnwatched ? 0 : Math.min(100, ((platformData.resume / platformData.duration) * 100).toFixed(1));
+            const zeroProgressLabel = platformData.status === "watched"
+                ? "Watched"
+                : isEpisode && platformData.status === "unwatched" ? "Up Next" : "Unwatched";
             
             return `
                 <div class="platform-badge badge-${type}">
                     <div style="text-transform: capitalize; font-weight:600;"><i class="${type === 'plex' ? 'fa-solid fa-server' : type === 'jellyfin' ? 'fa-solid fa-server' : 'fa-solid fa-server'}"></i> ${type}</div>
-                    <div class="badge-value">${isUnwatched ? 'Up Next' : formatTime(platformData.resume)}</div>
+                    <div class="badge-value">${isUnwatched ? zeroProgressLabel : formatTime(platformData.resume)}</div>
                     <div class="timestamp-val">of ${formatTime(platformData.duration)}</div>
                     <div class="progress-wrapper">
                         <div class="progress-bar bar-${type}" style="width: ${pct}%"></div>
@@ -291,6 +294,7 @@
                         entry.kodi,
                         entry.jellyfin
                     ].filter(Boolean);
+                    const isEpisode = platforms.some(platform => platform.media_type === "episode");
 
                     const hasResume = platforms.some(platform =>
                         platform.resume &&
@@ -300,7 +304,9 @@
 
                     if (hasResume) {
                         inProgress.push([rawPath, entry]);
-                    } else {
+                    } else if (isEpisode && platforms.some(platform =>
+                        platform.status === "unwatched"
+                    ) && platforms.every(platform => platform.status !== "watched")) {
                         upNext.push([rawPath, entry]);
                     }
 
@@ -322,7 +328,8 @@
                     items.forEach(([rawPath, entry]) => {
 
                         const displayTitle = cleanMediaTitle(rawPath);
-                        const isEpisode = rawPath.toLowerCase().startsWith("tv shows");
+                        const isEpisode = [entry.plex, entry.kodi, entry.jellyfin]
+                            .some(platform => platform && platform.media_type === "episode");
 
                         const row = document.createElement("div");
                         row.className = "media-row";
@@ -346,11 +353,11 @@
 
                             <div class="platform-grid">
 
-                                ${generatePlatformWidget(entry.plex,'plex')}
+                                ${generatePlatformWidget(entry.plex,'plex',isEpisode)}
 
-                                ${generatePlatformWidget(entry.kodi,'kodi')}
+                                ${generatePlatformWidget(entry.kodi,'kodi',isEpisode)}
 
-                                ${generatePlatformWidget(entry.jellyfin,'jellyfin')}
+                                ${generatePlatformWidget(entry.jellyfin,'jellyfin',isEpisode)}
 
                             </div>
                         `;
