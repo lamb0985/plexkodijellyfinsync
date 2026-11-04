@@ -25,7 +25,7 @@ docker compose up -d
 docker logs -f plexkodijellyfinsync
 ```
 
-The example Compose file mounts host `/app`, `/config`, and `/scripts` directories. Those mounts override files bundled in the image. For an existing installation, copy the updated `app/scripts/plexkodijellyfinsync.py` to your host-mounted `/scripts` directory; pulling a new image will not overwrite it. Preserve your own `/config/.env` and `/config/.last_sync_state.json`.
+The example Compose file mounts only host `/config`, `/logs`, and `/scripts` directories; `/app` comes from the image. On each container start, the entrypoint copies `/app/scripts/plexkodijellyfinsync.py` into `/scripts`, replacing any older host-mounted copy. If an existing container mounts `/app`, remove that mount before updating or it will hide the new image's script. After pulling a new image, recreate the container to run the updated entrypoint. Any local edits to `/scripts/plexkodijellyfinsync.py` will be overwritten on startup. Preserve your own `/config/.env` and `/config/.last_sync_state.json`.
 
 The existing Flask server exposes `/`, `/plex`, `/sync`, `/cachereset`, `/status`, and `/tracker`. Configure the Plex webhook to point to the container's reachable `http://YOUR_HOST:5000/plex` address if you use Plex webhooks. The other pages and endpoints retain their existing behavior and authentication settings.
 

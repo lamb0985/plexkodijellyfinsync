@@ -46,6 +46,10 @@ else
   echo "✅ /scripts already populated"
 fi
 
+echo "🔄 Updating /scripts/plexkodijellyfinsync.py from bundled image..."
+cp -f /app/scripts/plexkodijellyfinsync.py /scripts/plexkodijellyfinsync.py
+chown "$PUID:$PGID" /scripts/plexkodijellyfinsync.py
+
 echo "🚀 Starting Flask webhook server in background..."
 su appuser -c "umask $UMASK && python3 /scripts/flask-webhook.py &"
 

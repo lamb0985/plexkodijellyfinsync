@@ -11,7 +11,6 @@ services:
       - UMASK=0002
       - TZ=America/New_York
     volumes:
-      - <pathtoappdata>/plexkodijellyfinsync/app:/app
       - <pathtoappdata>/plexkodijellyfinsync/logs/:/logs
       - <pathtoappdata>/plexkodijellyfinsync/config:/config          # Mount local config folder with .env
       - <pathtoappdata>/plexkodijellyfinsync/scripts:/scripts        # Mount scripts folder (optional, auto-copied)
