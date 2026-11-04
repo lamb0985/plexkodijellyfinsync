@@ -246,8 +246,7 @@
 
             const isUnwatched = platformData.status === "unwatched" || !platformData.resume;
             const pct = isUnwatched ? 0 : Math.min(100, ((platformData.resume / platformData.duration) * 100).toFixed(1));
-            const zeroProgressLabel = platformData.status === "watched"
-                ? "Watched"
+            const zeroProgressLabel = platformData.status === "watched" ? "Watched"
                 : isEpisode && platformData.status === "unwatched" ? "Up Next" : "Unwatched";
             
             return `
