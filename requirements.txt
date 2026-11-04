@@ -1,0 +1,8 @@
+requests
+pymysql
+python-dotenv
+plexapi
+rich
+flask
+flask_socketio
+eventlet

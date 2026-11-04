@@ -1,0 +1,21 @@
+version: "3.3"
+
+services:
+  plexkodisync:
+    image: lamb0985/plexkodijellyfinsync:latest
+    container_name: plexkodijellyfinsync
+    restart: unless-stopped
+    environment:
+      - PUID=1000
+      - PGID=100
+      - UMASK=0002
+      - TZ=America/New_York
+    volumes:
+      - <pathtoappdata>/plexkodijellyfinsync/app:/app
+      - <pathtoappdata>/plexkodijellyfinsync/logs/:/logs
+      - <pathtoappdata>/plexkodijellyfinsync/config:/config          # Mount local config folder with .env
+      - <pathtoappdata>/plexkodijellyfinsync/scripts:/scripts        # Mount scripts folder (optional, auto-copied)
+      - /etc/localtime:/etc/localtime:ro
+    ports:
+      - "5000:5000"               # If your app exposes a Flask server
+    network_mode: bridge

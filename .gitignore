@@ -1,0 +1,10 @@
+# Local configuration and runtime state
+app/config/.env
+app/config/.env-pending
+app/config/.last_sync_state.json
+app/logs/*
+logs/
+
+# Python artifacts
+__pycache__/
+*.py[cod]

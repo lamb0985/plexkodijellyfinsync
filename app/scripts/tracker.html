@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plex Kodi Jellyfin Sync Tracker</title>
+    <!-- Essential Fonts & Media Icons -->
+    <link rel="stylesheet" href="https://googleapis.com">
+    <link rel="stylesheet" href="https://cloudflare.com">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <style>
+        /* Force full screen viewport layout and remove white canvas defaults */
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #0d0e15;
+            font-family: 'Inter', sans-serif;
+            color: #f8f8f2;
+            overflow: hidden; /* Manage scrolling inside the tracker panel instead */
+        }
+
+        /* Responsive Dashboard Container - Scales exactly with your browser window size */
+        .fullscreen-panel {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            background-color: #141622;
+            box-sizing: border-box;
+            padding: 24px;
+        }
+
+        /* Header Navigation Grid */
+        .panel-title {
+            position: relative;
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #50FA7B;
+            text-align: center;
+            border-bottom: 1px solid #2e3450;
+            padding-bottom: 16px;
+            flex-shrink: 0;
+        }
+
+        .panel-title span {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Fully Responsive Content Feed Scroll Area */
+        .media-status-list {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            overflow-y: auto;
+            padding-right: 8px;
+            box-sizing: border-box;
+        }
+
+        /* Dynamic Container Rows */
+        .media-row { 
+            background-color: #1e2235; 
+            border: 1px solid #2e3450; 
+            border-radius: 12px; 
+            padding: 20px; 
+            display: flex; 
+            flex-direction: column; 
+            gap: 14px; 
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15); 
+        }
+
+        .section-header {
+            margin: 12px 0 8px;
+            padding: 12px 16px;
+            background: #1a1d2b;
+            border: 1px solid #2e3450;
+            border-left: 5px solid #50FA7B;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: .08em;
+            color: #f8f8f2;
+        }
+
+        .section-header.inprogress {
+            border-left-color: #ffb86c;
+        }
+
+        .section-header.upnext {
+            border-left-color: #50FA7B;
+        }
+
+        .media-title-area { 
+            font-weight: 600; 
+            font-size: 1.05rem; 
+            color: #ffffff; 
+            display: flex; 
+            align-items: start; 
+            gap: 12px; 
+            line-height: 1.4; 
+        }
+        
+        .media-title-area i { margin-top: 3px; }
+        
+        .file-path-subtext { 
+            display: block; 
+            font-size: 0.8rem; 
+            color: #6272a4; 
+            font-family: 'JetBrains Mono', monospace; 
+            word-break: break-all; 
+            margin-top: 4px; 
+            font-weight: 400; 
+        }
+
+        /* Grid adapts flexibly based on user panel horizontal space widths */
+        .platform-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); 
+            gap: 12px; 
+        }
+
+        .platform-badge { 
+            padding: 16px; 
+            border-radius: 8px; 
+            background-color: rgba(0,0,0,0.2); 
+            border: 1px solid rgba(255,255,255,0.04); 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            gap: 8px; 
+            font-size: 0.85rem; 
+            font-weight: 500; 
+            text-align: center; 
+        }
+        
+        /* Branding Color Flags */
+        .badge-plex { border-top: 3px solid #e5a93b; } .badge-plex i { color: #e5a93b !important; }
+        .badge-kodi { border-top: 3px solid #1cbdff; } .badge-kodi i { color: #1cbdff !important; }
+        .badge-jellyfin { border-top: 3px solid #a855f7; } .badge-jellyfin i { color: #a855f7 !important; }
+        
+        /* Progress Bar Pipeline layouts */
+        .progress-wrapper { width: 100%; background: #282a36; border-radius: 4px; height: 6px; overflow: hidden; margin-top: 4px; position: relative; }
+        .progress-bar { height: 100%; border-radius: 4px; transition: width 0.3s ease; }
+        .bar-plex { background-color: #e5a93b; } 
+        .bar-kodi { background-color: #1cbdff; } 
+        .bar-jellyfin { background-color: #a855f7; } 
+        
+        .badge-value { font-size: 1rem; font-weight: 600; color: #f8f8f2; }
+        .timestamp-val { font-family: 'JetBrains Mono', monospace; color: #6272a4; font-size: 0.75rem; }
+        .status-tag { font-size: 0.75rem; padding: 4px 8px; border-radius: 4px; font-weight: bold; text-transform: uppercase; }
+
+        .btn-refresh {
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            padding: 8px 16px;
+            font-size: 0.9rem;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid #2e3450;
+            color: #f8f8f2;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-weight: 500;
+        }
+        .btn-refresh:hover { background: rgba(255,255,255,0.1); border-color: #949eb4; }
+
+        /* Custom Scrollbar Configuration */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #2e3450; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #6272a4; }
+    </style>
+</head>
+<body>
+
+    <div class="fullscreen-panel">
+        <div class="panel-title">
+            <span><i class="fa-solid fa-film" style="color: #FF79C6;"></i> Plex Kodi Jellyfin Sync Tracker</span>
+            <button class="btn-refresh" onclick="window.location.href='/'">
+                <i class="fa-solid fa-arrow-left"></i> Back to Dashboard
+            </button>
+        </div>
+        
+        <div class="media-status-list" id="statusViewContainer">
+            <div style="color: #949eb4; text-align: center; padding: 100px 0; font-size: 1rem;">
+                <i class="fa-solid fa-circle-nodes" style="font-size: 2.5rem; margin-bottom:12px; display:block; color: #a855f7;"></i>
+                Querying media server resume status matrices...
+            </div>
+        </div>
+    </div>
+
+    <!-- Data Engine Parser Scripts -->
+    <script>
+        // Strict title sanitizer that removes folders, hashes, codecs, and release group endings
+        function cleanMediaTitle(pathString) {
+            if (!pathString) return "Unknown Title";
+            
+            // 1. Grab only the final filename after the last forward slash
+            const parts = pathString.split('/');
+            let fileName = parts[parts.length - 1];
+            
+            // 2. Drop the file extension (.mkv, .mp4, etc.)
+            fileName = fileName.replace(/\.[^/.]+$/, "");
+            
+            // 3. Completely strip structural tracker ID blocks like {tmdb-123} or {edition-IMAX}
+            fileName = fileName.replace(/\{.*?\}/g, "");
+            
+            // 4. Strip everything between brackets [Remux-2160p...] AND anything that follows it to the end of the string
+            fileName = fileName.replace(/\[.*$/, "");
+            
+            // 5. Clean up stray leading/trailing hyphens, duplicate spaces, or trailing symbols
+            fileName = fileName.replace(/\s+-\s*$/, "");
+            fileName = fileName.replace(/\s+/g, " ");
+            
+            return fileName.trim();
+        }
+
+        function formatTime(seconds) {
+            if (!seconds || isNaN(seconds)) return "0:00";
+            const hrs = Math.floor(seconds / 3600);
+            const mins = Math.floor((seconds % 3600) / 60);
+            const secs = Math.floor(seconds % 60);
+            
+            if (hrs > 0) {
+                return `${hrs}:${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+            }
+            return `${mins}:${secs.toString().padStart(2, '0')}`;
+        }
+
+        function generatePlatformWidget(platformData, type) {
+            if (!platformData) {
+                return `
+                    <div class="platform-badge badge-${type}">
+                        <div><i class="${type === 'plex' ? 'fa-solid fa-server' : type === 'jellyfin' ? 'fa-solid fa-server' : 'fa-solid fa-server'}"></i> ${type.toUpperCase()}</div>
+                        <span class="status-tag" style="background: rgba(255,255,255,0.05); color: #6272a4; margin-top: auto;">Unlinked</span>
+                    </div>`;
+            }
+
+            const isUnwatched = platformData.status === "unwatched" || !platformData.resume;
+            const pct = isUnwatched ? 0 : Math.min(100, ((platformData.resume / platformData.duration) * 100).toFixed(1));
+            
+            return `
+                <div class="platform-badge badge-${type}">
+                    <div style="text-transform: capitalize; font-weight:600;"><i class="${type === 'plex' ? 'fa-solid fa-server' : type === 'jellyfin' ? 'fa-solid fa-server' : 'fa-solid fa-server'}"></i> ${type}</div>
+                    <div class="badge-value">${isUnwatched ? 'Up Next' : formatTime(platformData.resume)}</div>
+                    <div class="timestamp-val">of ${formatTime(platformData.duration)}</div>
+                    <div class="progress-wrapper">
+                        <div class="progress-bar bar-${type}" style="width: ${pct}%"></div>
+                    </div>
+                    <span class="timestamp-val" style="margin-top: 2px;">${pct}% Complete</span>
+                </div>
+            `;
+        }
+
+        function fetchStatus() {
+            fetch('/status', { credentials: 'include' })
+            .then(r => r.json())
+            .then(res => {
+
+                const container = document.getElementById("statusViewContainer");
+
+                if (!res.data || Object.keys(res.data).length === 0) {
+                    container.innerHTML = `
+                    <div style="color:#949eb4;text-align:center;padding:100px 0;font-size:1rem;">
+                        <i class="fa-solid fa-circle-nodes"
+                           style="font-size:2rem;margin-bottom:12px;display:block;"></i>
+                        No synchronization logs mapped inside state telemetry file.
+                    </div>`;
+                    return;
+                }
+
+                container.innerHTML = "";
+
+                const inProgress = [];
+                const upNext = [];
+
+                Object.keys(res.data).forEach(rawPath => {
+
+                    const entry = res.data[rawPath];
+
+                    const platforms = [
+                        entry.plex,
+                        entry.kodi,
+                        entry.jellyfin
+                    ].filter(Boolean);
+
+                    const hasResume = platforms.some(platform =>
+                        platform.resume &&
+                        platform.resume > 0 &&
+                        platform.status !== "watched"
+                    );
+
+                    if (hasResume) {
+                        inProgress.push([rawPath, entry]);
+                    } else {
+                        upNext.push([rawPath, entry]);
+                    }
+
+                });
+
+
+                function renderSection(title, cssClass, items) {
+
+                    if (!items.length)
+                        return;
+
+                    const header = document.createElement("div");
+                    header.className = `section-header ${cssClass}`;
+                    header.textContent = `${title} (${items.length})`;
+
+                    container.appendChild(header);
+
+
+                    items.forEach(([rawPath, entry]) => {
+
+                        const displayTitle = cleanMediaTitle(rawPath);
+                        const isEpisode = rawPath.toLowerCase().startsWith("tv shows");
+
+                        const row = document.createElement("div");
+                        row.className = "media-row";
+
+                        row.innerHTML = `
+                            <div class="media-title-area">
+
+                                <i class="${isEpisode 
+                                ? 'fa-solid fa-tv' 
+                                : 'fa-solid fa-film'}"
+                                style="color:#FF79C6;font-size:1.25rem;"></i>
+
+                                <div style="flex-grow:1;">
+                                    <strong>${displayTitle}</strong>
+                                    <span class="file-path-subtext">
+                                        ${rawPath}
+                                    </span>
+                                </div>
+
+                            </div>
+
+                            <div class="platform-grid">
+
+                                ${generatePlatformWidget(entry.plex,'plex')}
+
+                                ${generatePlatformWidget(entry.kodi,'kodi')}
+
+                                ${generatePlatformWidget(entry.jellyfin,'jellyfin')}
+
+                            </div>
+                        `;
+
+                        container.appendChild(row);
+
+                    });
+                }
+
+
+                renderSection(
+                    "In Progress",
+                    "inprogress",
+                    inProgress
+                );
+
+
+                renderSection(
+                    "Up Next",
+                    "upnext",
+                    upNext
+                );
+
+
+            })
+            .catch(err => {
+
+                document.getElementById("statusViewContainer").innerHTML =
+                `
+                <div style="color:#ff5555;text-align:center;padding:100px 0;font-size:1.1rem;">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                    Communication connection with background engine severed.
+                </div>
+                `;
+
+            });
+        }
+
+        fetchStatus();
+    </script>
+</body>
+</html>

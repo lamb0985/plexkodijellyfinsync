@@ -1,0 +1,9 @@
+# Local credentials must never enter the image build context
+app/config/.env
+app/config/.env-pending
+app/config/.last_sync_state.json
+app/logs/
+logs/
+**/__pycache__/
+**/*.pyc
+**/*.pyo

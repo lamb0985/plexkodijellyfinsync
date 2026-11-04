@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+ <head>
+ <meta charset="UTF-8">
+ <title>Plex Kodi Jellyfin Sync</title>
+ <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css">
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+ <script>hljs.highlightAll();</script>
+<style>
+body {
+    font-family: 'Inter', monospace, sans-serif;
+    background: #0d0e15;
+    color: #f8f8f2;
+    display: flex;
+    justify-content: center;
+    align-items: stretch;
+    width: 100%;
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    background: #141622;
+    border: 1px solid #2e3450;
+    border-radius: 0;
+    box-sizing: border-box;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: none;
+}
+
+h1 {
+    color: #50FA7B;
+    text-align: center;
+}
+h3 {
+    color: #FFFFFF;
+}
+
+button {
+    padding: 8px 16px;
+    margin: 4px;
+    background: rgba(255,255,255,0.05);
+    color: #f8f8f2;
+    border: 1px solid #2e3450;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all .2s ease;
+}
+
+button:hover {
+    background: rgba(255,255,255,0.1);
+    border-color: #949eb4;
+}
+
+textarea,
+input {
+    background: #1e2235;
+    color: #f8f8f2;
+    border: 1px solid #2e3450;
+    border-radius: 8px;
+    box-sizing: border-box;
+}
+
+#terminal {
+    flex: 1;
+    min-height: 0;
+    resize: none;
+}
+
+textarea::placeholder,
+input::placeholder {
+    color: #6272a4;
+}
+
+pre {
+    background: #1e2235;
+    border: 1px solid #2e3450;
+    border-radius: 8px;
+    padding: 12px;
+    overflow: auto;
+}
+
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #2e3450;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #6272a4;
+}
+.button-row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    margin: 16px 0;
+}
+</style>
+ </head>
+ <body>
+ <div class="container">
+ <h1>Plex Kodi Jellyfin Sync Dashboard</h1>
+    <div class="button-row">
+        <button onclick="syncNow()">Sync</button>
+        <button onclick="resetSync()">Reset</button>
+        <button onclick="toggleStatus()">Status</button>
+        <button onclick="tracker()">Tracker</button>
+    </div>
+ <h3>Live Logs</h3>
+
+<textarea id="terminal" readonly style="width:100%;">Connecting to logs…</textarea>
+
+<input
+    id="cmdinput"
+    placeholder="Type command and press Enter"
+    style="width:100%; padding:8px; margin-top:8px;"
+/>
+
+<div id="statusBoxWrapper" style="display:none; margin-top:20px; text-align:left;">
+ <h3>Sync Status <button id="copyBtn" onclick="copyStatus()">Copy</button></h3>
+ <pre><code id="statusBox" class="json">No status yet.</code></pre>
+ </div>
+ </div>
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.min.js"></script>
+ <script>
+ const termBox = document.getElementById("terminal");
+ const socket = io();
+ socket.on("log_update", line => {
+ termBox.value += line + "\n";
+ const lines = termBox.value.split("\n");
+ if (lines.length > 1000) termBox.value = lines.slice(-1000).join("\n");
+ termBox.scrollTop = termBox.scrollHeight;
+ });
+ document.getElementById("cmdinput").addEventListener("keypress", e => {
+ if (e.key === "Enter") {
+ socket.emit("run_cmd", e.target.value);
+ e.target.value = "";
+ }
+ });
+ socket.on("cmd_output", data => {
+ termBox.value += data + "\n";
+ termBox.scrollTop = termBox.scrollHeight;
+ });
+ function fetchStatus() {
+ fetch('/status', { credentials: 'include' })
+ .then(r => r.json())
+ .then(data => {
+ document.getElementById("statusBox").textContent = JSON.stringify(data, null, 2);
+ hljs.highlightElement(document.getElementById("statusBox"));
+ });
+ }
+ function syncNow() { fetch('/sync', { credentials: 'include' }).then(fetchStatus); }
+ function resetSync() { fetch('/reset', { credentials: 'include' }).then(fetchStatus); }
+ function toggleStatus() {
+ const w = document.getElementById("statusBoxWrapper");
+ if (w.style.display === "none") {
+ w.style.display = "block";
+ fetchStatus();
+ } else w.style.display = "none";
+ }
+ function tracker() { window.location.href = "/tracker"; }
+ function copyStatus() { navigator.clipboard.writeText(document.getElementById("statusBox").textContent); }
+ </script>
+ </body>
+</html>
