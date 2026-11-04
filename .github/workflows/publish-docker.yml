@@ -2,6 +2,16 @@ name: Publish Docker Hub image
 
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - .github/workflows/publish-docker.yml
+      - .dockerignore
+      - Dockerfile
+      - entrypoint.sh
+      - requirements.txt
+      - app/**
 
 permissions:
   contents: read
