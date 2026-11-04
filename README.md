@@ -29,10 +29,6 @@ The example Compose file mounts host `/app`, `/config`, and `/scripts` directori
 
 The existing Flask server exposes `/`, `/plex`, `/sync`, `/cachereset`, `/status`, and `/tracker`. Configure the Plex webhook to point to the container's reachable `http://YOUR_HOST:5000/plex` address if you use Plex webhooks. The other pages and endpoints retain their existing behavior and authentication settings.
 
-## Publish an image
-
-The manual [Publish Docker Hub image](.github/workflows/publish-docker.yml) workflow builds this repository and pushes both `latest` and a commit-specific tag. Add a GitHub Actions repository secret named `DOCKERHUB_TOKEN` containing a Docker Hub access token with write access to `lamb0985/plexkodijellyfinsync`, then run the workflow from GitHub's Actions tab. Keep the access token out of source and chat.
-
 ## Notes
 
 - The Rich console output retains the connection messages, On Deck / Next Up, each platform's Continue Watching or In Progress table, comparison, and results.
