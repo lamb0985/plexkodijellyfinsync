@@ -29,6 +29,8 @@ The example Compose file mounts host `/app`, `/config`, and `/scripts` directori
 
 The existing Flask server exposes `/`, `/plex`, `/sync`, `/cachereset`, `/status`, and `/tracker`. Configure the Plex webhook to point to the container's reachable `http://YOUR_HOST:5000/plex` address if you use Plex webhooks. The other pages and endpoints retain their existing behavior and authentication settings.
 
+See the [Changelog](CHANGELOG.md) for the exact edits and verification in each documented update.
+
 ## Notes
 
 - The Rich console output retains the connection messages, On Deck / Next Up, each platform's Continue Watching or In Progress table, comparison, and results.
