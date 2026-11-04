@@ -15,7 +15,7 @@ Changes are listed here with links to the corresponding GitHub commits. This fil
 ### Verification
 
 - The entrypoint passed `sh -n`. An isolated shell check exercised its copy block with both populated and empty `/scripts` directories and confirmed that the image script replaced an older mounted copy.
-- The main Python script, Flask server, webpages, log formatting, and `.env` variable names were not changed in this commit. No Docker engine or live three-platform sync was available in the workspace for a container run.
+- The main Python script, Flask server, webpages, log formatting, and `.env` variable names were not changed in this commit. [GitHub Actions run 41770308933](https://github.com/lamb0985/plexkodijellyfinsync/actions/runs/41770308933) built and pushed both `latest` and the commit-specific Docker Hub tag. A live three-platform sync and container startup on the user's host were not run from this workspace.
 
 ## 2026-11-04 — Restore original script and keep unwatched movies out of Up Next
 
