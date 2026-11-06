@@ -16,7 +16,7 @@ Changes are listed here with links to the corresponding GitHub commits. This fil
 ### Verification
 
 - Python syntax compilation passed. The actual Rich rendering functions were exercised offline with mixed movie/episode data and with empty inputs; order, empty messages, platform columns, and TV-only On Deck classification were checked.
-- The sync and backend functions outside reporting were checked unchanged against the uploaded original. No live Plex/Kodi/Jellyfin sync was run in this workspace.
+- The sync and backend functions outside reporting were checked unchanged against the uploaded original. [GitHub Actions run 42311251684](https://github.com/lamb0985/plexkodijellyfinsync/actions/runs/42311251684) built and pushed Docker Hub `latest` and `sha-26daceb88c7c47100627b76212b516020361299b` at digest `sha256:5eaf04fa756b22b34309f84b91af6064590211c1d2c60f405d8595ee0b0e6406`. No live Plex/Kodi/Jellyfin sync was run in this workspace.
 
 ## 2026-11-04 — Refresh the mounted main script at container startup
 
