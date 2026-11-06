@@ -2,6 +2,21 @@
 
 Changes are listed here with links to the corresponding GitHub commits. This file starts with the restored single-script release; earlier history is available in [GitHub's commit history](https://github.com/lamb0985/plexkodijellyfinsync/commits/main).
 
+## 2026-11-06 — Align Rich report columns
+
+[Source commit `b7014b0`](https://github.com/lamb0985/plexkodijellyfinsync/commit/b7014b0315fdffa0209541b42ac3c01c4fd9126b)
+
+### Changed
+
+- Movies, Shows, On Deck, and empty-state report tables now fill the same terminal width and use the same item, Plex, Kodi, Jellyfin, and status column sizes. Their titles and platform headings align across sections.
+- Plex, Kodi, and Jellyfin detail tables now fill the same width with consistent title, relative path, resume, and status columns.
+- This is a layout-only change; platform authentication, syncing, TV On Deck selection, Flask pages/endpoints, and `.env` names were not changed.
+
+### Verification
+
+- Python syntax compilation passed. The actual Rich tables were rendered offline at 84 and 100 columns with long episode paths, mixed data, and empty sections. Platform header character positions matched across all report tables without overflow. A live sync was not run.
+- [GitHub Actions run 42312326756](https://github.com/lamb0985/plexkodijellyfinsync/actions/runs/42312326756) built and pushed Docker Hub `latest` and `sha-b7014b0315fdffa0209541b42ac3c01c4fd9126b` at digest `sha256:b0fb9d30ed44fc69653858d2b06cf371269f2d19f36116add7128f0a65374b09`.
+
 ## 2026-11-06 — Group sync logs into Movies, Shows, and On Deck
 
 [Source commit `26daceb`](https://github.com/lamb0985/plexkodijellyfinsync/commit/26daceb88c7c47100627b76212b516020361299b)
