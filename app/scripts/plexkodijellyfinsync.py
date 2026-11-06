@@ -1467,6 +1467,14 @@ def add_platform_label_row(tbl):
     )
 
 
+def add_aligned_platform_columns(tbl, item_label, item_style="white"):
+    tbl.add_column(item_label, style=item_style, ratio=1)
+    tbl.add_column("Plex", justify="right", style="yellow", width=9, no_wrap=True)
+    tbl.add_column("Kodi", justify="right", style="cyan", width=9, no_wrap=True)
+    tbl.add_column("Jellyfin", justify="right", style="blue", width=9, no_wrap=True)
+    tbl.add_column("Status", justify="center", style="magenta", width=3, no_wrap=True)
+
+
 def is_on_deck_display_path(plex_item, kodi_item, jellyfin_item):
     items = [item for item in (plex_item, kodi_item, jellyfin_item) if item]
     return (
@@ -1527,12 +1535,8 @@ def print_paths(plex_items, kodi_items, jellyfin_items):
         return table
 
     def make_on_deck_table_shows(title, plex_items, kodi_items, jellyfin_items):
-        table = Table(box=box.SIMPLE_HEAD, title=title, title_style="bold green", show_header=False)
-        table.add_column("Show", justify="left", style="bold green", no_wrap=False)
-        table.add_column("Plex", justify="right", style="yellow", no_wrap=True)
-        table.add_column("Kodi", justify="right", style="cyan", no_wrap=True)
-        table.add_column("Jellyfin", justify="right", style="blue", no_wrap=True)
-        table.add_column("Status", justify="center", style="magenta", no_wrap=True)
+        table = Table(box=box.SIMPLE_HEAD, title=title, title_style="bold green", show_header=False, expand=True)
+        add_aligned_platform_columns(table, "Show", "bold green")
 
         add_platform_label_row(table)  # 👈 added
 
@@ -1583,13 +1587,14 @@ def print_paths(plex_items, kodi_items, jellyfin_items):
             title=f"▶ {platform_name.capitalize()} {status_label}",
             title_style=f"bold {color}",
             show_header=False,
-            header_style="bold"
+            header_style="bold",
+            expand=True,
         )
 
-        table.add_column("Title", style=f"bold {color}", no_wrap=False)
-        table.add_column("Relative Path", style=color, no_wrap=False)
-        table.add_column("Resume", style="cyan", no_wrap=False)
-        table.add_column("Status", style="white", no_wrap=False)
+        table.add_column("Title", style=f"bold {color}", width=max(18, min(30, console.width // 3)))
+        table.add_column("Relative Path", style=color, ratio=1)
+        table.add_column("Resume", style="cyan", justify="right", width=9, no_wrap=True)
+        table.add_column("Status", style="white", justify="center", width=3, no_wrap=True)
 
         filtered_items = {
             k: v for k, v in items.items()
@@ -1618,12 +1623,8 @@ def print_paths(plex_items, kodi_items, jellyfin_items):
         return table
 
     def make_empty_progress_table(label):
-        table = Table(box=box.SIMPLE_HEAD, show_header=False)
-        table.add_column("Title", style="white")
-        table.add_column("Plex", justify="right", style="yellow")
-        table.add_column("Kodi", justify="right", style="cyan")
-        table.add_column("Jellyfin", justify="right", style="blue")
-        table.add_column("Status", style="magenta")
+        table = Table(box=box.SIMPLE_HEAD, show_header=False, expand=True)
+        add_aligned_platform_columns(table, "Title")
         add_platform_label_row(table)
         table.add_row(f"No In Progress {label}", "", "", "", "")
         return table
@@ -1673,13 +1674,9 @@ def print_sync_comparison(plex_items, kodi_items, jellyfin_items):
     }
 
     def make_sync_table(title, items_plex, items_kodi, items_jelly, media_type, on_deck=False):
-        tbl = Table(box=box.SIMPLE_HEAD, title=title, title_style="bold white", show_header=False)
+        tbl = Table(box=box.SIMPLE_HEAD, title=title, title_style="bold white", show_header=False, expand=True)
         col_name = "Movie" if media_type == "movie" else "Show"
-        tbl.add_column(col_name, style="white")
-        tbl.add_column("Plex", justify="right", style="yellow")
-        tbl.add_column("Kodi", justify="right", style="cyan")
-        tbl.add_column("Jellyfin", justify="right", style="blue")
-        tbl.add_column("Status", style="magenta", justify="center")
+        add_aligned_platform_columns(tbl, col_name)
 
         add_platform_label_row(tbl)  # 👈 added
 
@@ -1764,13 +1761,9 @@ def print_sync_results(plex_items, kodi_items, jellyfin_items, actions):
     }
 
     def make_sync_table(title, items_plex, items_kodi, items_jelly, media_type, on_deck=False):
-        tbl = Table(box=box.SIMPLE_HEAD, title=title, title_style="bold white", show_header=False)
+        tbl = Table(box=box.SIMPLE_HEAD, title=title, title_style="bold white", show_header=False, expand=True)
         col_name = "Movie" if media_type == "movie" else "Show"
-        tbl.add_column(col_name, style="white")
-        tbl.add_column("Plex", justify="right", style="yellow")
-        tbl.add_column("Kodi", justify="right", style="cyan")
-        tbl.add_column("Jellyfin", justify="right", style="blue")
-        tbl.add_column("Status", style="magenta", justify="center")
+        add_aligned_platform_columns(tbl, col_name)
 
         add_platform_label_row(tbl)  # 👈 added
 
