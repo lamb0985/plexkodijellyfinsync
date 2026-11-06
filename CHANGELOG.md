@@ -2,6 +2,22 @@
 
 Changes are listed here with links to the corresponding GitHub commits. This file starts with the restored single-script release; earlier history is available in [GitHub's commit history](https://github.com/lamb0985/plexkodijellyfinsync/commits/main).
 
+## 2026-11-06 — Group sync logs into Movies, Shows, and On Deck
+
+[Source commit `26daceb`](https://github.com/lamb0985/plexkodijellyfinsync/commit/26daceb88c7c47100627b76212b516020361299b)
+
+### Changed
+
+- The initial Rich output now prints a **Movies** section, then **Shows**, then the TV episode **On Deck | Next Up** table. Original Plex, Kodi, and Jellyfin detail-table titles and item columns are retained.
+- Sync Comparison and Sync Results now each print separate **Movies**, **Shows**, and **On Deck** tables in that order. Their Plex, Kodi, and Jellyfin headings are right aligned.
+- Empty sections display **No In Progress Movies**, **No In Progress Shows**, or **No On Deck** in the item column. On Deck includes unwatched TV episodes at zero progress with no platform reporting watched; unwatched movies remain in the Movies category.
+- The Shows progress section now displays fetched `episode` items as well as `show` items.
+
+### Verification
+
+- Python syntax compilation passed. The actual Rich rendering functions were exercised offline with mixed movie/episode data and with empty inputs; order, empty messages, platform columns, and TV-only On Deck classification were checked.
+- The sync and backend functions outside reporting were checked unchanged against the uploaded original. No live Plex/Kodi/Jellyfin sync was run in this workspace.
+
 ## 2026-11-04 — Refresh the mounted main script at container startup
 
 [Source commit `2a41d97`](https://github.com/lamb0985/plexkodijellyfinsync/commit/2a41d97369d66b70fb9ffd360ce2fa21515df6f2)
