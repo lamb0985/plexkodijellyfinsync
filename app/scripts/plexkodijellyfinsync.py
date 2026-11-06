@@ -1467,6 +1467,16 @@ def add_platform_label_row(tbl):
     )
 
 
+def is_on_deck_display_path(plex_item, kodi_item, jellyfin_item):
+    items = [item for item in (plex_item, kodi_item, jellyfin_item) if item]
+    return (
+        any(item.get("media_type") == "episode" for item in items)
+        and any(item.get("status") == "unwatched" for item in items)
+        and all(item.get("status") != "watched" and int(item.get("resume", 0) or 0) == 0
+                for item in items)
+    )
+
+
 def print_paths(plex_items, kodi_items, jellyfin_items):
     def split_by_type(items):
         movies = {k: v for k, v in items.items() if v.get("media_type") == "movie"}
@@ -1480,9 +1490,9 @@ def print_paths(plex_items, kodi_items, jellyfin_items):
     def make_on_deck_table(title, plex_items, kodi_items, jellyfin_items):
         table = Table(box=box.SIMPLE_HEAD, title=title, title_style="bold green")
         table.add_column("Movie", style="green", no_wrap=False)
-        table.add_column("Plex", justify="center", style="yellow", no_wrap=True)
-        table.add_column("Kodi", justify="center", style="cyan", no_wrap=True)
-        table.add_column("Jellyfin", justify="center", style="blue", no_wrap=True)
+        table.add_column("Plex", justify="right", style="yellow", no_wrap=True)
+        table.add_column("Kodi", justify="right", style="cyan", no_wrap=True)
+        table.add_column("Jellyfin", justify="right", style="blue", no_wrap=True)
         table.add_column("Status", justify="center", style="magenta", no_wrap=True)
 
         all_paths = sorted(set(plex_items) | set(kodi_items) | set(jellyfin_items))
@@ -1519,9 +1529,9 @@ def print_paths(plex_items, kodi_items, jellyfin_items):
     def make_on_deck_table_shows(title, plex_items, kodi_items, jellyfin_items):
         table = Table(box=box.SIMPLE_HEAD, title=title, title_style="bold green", show_header=False)
         table.add_column("Show", justify="left", style="bold green", no_wrap=False)
-        table.add_column("Plex", justify="center", style="yellow", no_wrap=True)
-        table.add_column("Kodi", justify="center", style="cyan", no_wrap=True)
-        table.add_column("Jellyfin", justify="center", style="blue", no_wrap=True)
+        table.add_column("Plex", justify="right", style="yellow", no_wrap=True)
+        table.add_column("Kodi", justify="right", style="cyan", no_wrap=True)
+        table.add_column("Jellyfin", justify="right", style="blue", no_wrap=True)
         table.add_column("Status", justify="center", style="magenta", no_wrap=True)
 
         add_platform_label_row(table)  # 👈 added
@@ -1533,9 +1543,7 @@ def print_paths(plex_items, kodi_items, jellyfin_items):
             k = kodi_items.get(path)
             j = jellyfin_items.get(path)
 
-            if not ((p and p.get("status") == "unwatched") or
-                    (k and k.get("status") == "unwatched") or
-                    (j and j.get("status") == "unwatched")):
+            if not is_on_deck_display_path(p, k, j):
                 continue
 
             show_title = (p or k or j).get("combined_title") or (p or k or j).get("title") or "-"
@@ -1554,6 +1562,9 @@ def print_paths(plex_items, kodi_items, jellyfin_items):
             if idx % 2:
                 row = [f"[dim]{cell}[/dim]" for cell in row]
             table.add_row(*row)
+
+        if table.row_count == 1:
+            table.add_row("No On Deck", "", "", "", "")
 
         return table
 
@@ -1582,7 +1593,9 @@ def print_paths(plex_items, kodi_items, jellyfin_items):
 
         filtered_items = {
             k: v for k, v in items.items()
-            if v.get("media_type") == media_type and v.get("status") != "unwatched" and v.get("resume", 0) > 0
+            if (v.get("media_type") == "movie" if media_type == "movie"
+                else v.get("media_type") in ("show", "episode"))
+            and v.get("status") != "unwatched" and v.get("resume", 0) > 0
         }
 
         for idx, path in enumerate(sorted(filtered_items)):
@@ -1604,6 +1617,17 @@ def print_paths(plex_items, kodi_items, jellyfin_items):
 
         return table
 
+    def make_empty_progress_table(label):
+        table = Table(box=box.SIMPLE_HEAD, show_header=False)
+        table.add_column("Title", style="white")
+        table.add_column("Plex", justify="right", style="yellow")
+        table.add_column("Kodi", justify="right", style="cyan")
+        table.add_column("Jellyfin", justify="right", style="blue")
+        table.add_column("Status", style="magenta")
+        add_platform_label_row(table)
+        table.add_row(f"No In Progress {label}", "", "", "", "")
+        return table
+
     plex_continue_movies_table = make_continue_watching_table_platform("Plex", plex_movies, "movie", "yellow")
     kodi_continue_movies_table = make_continue_watching_table_platform("Kodi", kodi_movies, "movie", "cyan")
     jelly_continue_movies_table = make_continue_watching_table_platform("Jellyfin", jelly_movies, "movie", "blue")
@@ -1617,21 +1641,18 @@ def print_paths(plex_items, kodi_items, jellyfin_items):
     console.rule("")
     console.print()
 
-    if on_deck_shows_table.row_count > 0:
-        console.print(on_deck_shows_table)
-        console.print()
-
-    for table in [
-        plex_continue_movies_table,
-        kodi_continue_movies_table,
-        jelly_continue_movies_table,
-        plex_continue_shows_table,
-        kodi_continue_shows_table,
-        jelly_continue_shows_table
-    ]:
-        if table.row_count > 0:
+    for label, tables in (
+        ("Movies", (plex_continue_movies_table, kodi_continue_movies_table, jelly_continue_movies_table)),
+        ("Shows", (plex_continue_shows_table, kodi_continue_shows_table, jelly_continue_shows_table)),
+    ):
+        console.print(f"[bold white]{'🎬' if label == 'Movies' else '📺'} {label}[/]", justify="center")
+        filled = [table for table in tables if table.row_count > 0]
+        for table in filled or [make_empty_progress_table(label)]:
             console.print(table)
             console.print()
+
+    console.print(on_deck_shows_table)
+    console.print()
 
 
 def print_sync_comparison(plex_items, kodi_items, jellyfin_items):
@@ -1646,7 +1667,12 @@ def print_sync_comparison(plex_items, kodi_items, jellyfin_items):
     kodi_movies, kodi_shows = split_by_type(kodi_items)
     jelly_movies, jelly_shows = split_by_type(jellyfin_items)
 
-    def make_sync_table(title, items_plex, items_kodi, items_jelly, media_type):
+    on_deck_paths = {
+        path for path in set(plex_shows) | set(kodi_shows) | set(jelly_shows)
+        if is_on_deck_display_path(plex_shows.get(path), kodi_shows.get(path), jelly_shows.get(path))
+    }
+
+    def make_sync_table(title, items_plex, items_kodi, items_jelly, media_type, on_deck=False):
         tbl = Table(box=box.SIMPLE_HEAD, title=title, title_style="bold white", show_header=False)
         col_name = "Movie" if media_type == "movie" else "Show"
         tbl.add_column(col_name, style="white")
@@ -1658,6 +1684,11 @@ def print_sync_comparison(plex_items, kodi_items, jellyfin_items):
         add_platform_label_row(tbl)  # 👈 added
 
         all_paths = sorted(set(items_plex) | set(items_kodi) | set(items_jelly))
+        if not all_paths:
+            tbl.add_row(
+                "No On Deck" if on_deck else f"No In Progress {'Movies' if media_type == 'movie' else 'Shows'}",
+                "", "", "", ""
+            )
 
         for idx, path in enumerate(all_paths):
             pi = items_plex.get(path)
@@ -1675,7 +1706,7 @@ def print_sync_comparison(plex_items, kodi_items, jellyfin_items):
             jelly_time = format_time(jres)
 
             if pres == kres == jres:
-                action = "✔" if pres > 0 or media_type == "movie" else "🌱"
+                action = "🌱" if on_deck else "✔"
             else:
                 action = "🔄"
 
@@ -1694,14 +1725,25 @@ def print_sync_comparison(plex_items, kodi_items, jellyfin_items):
 
         return tbl
 
-    movie_table = make_sync_table("🔄 Sync Comparison", plex_movies, kodi_movies, jelly_movies, "movie")
-    show_table = make_sync_table("", plex_shows, kodi_shows, jelly_shows, "show")
+    movie_table = make_sync_table("🔄 Sync Comparison | Movies", plex_movies, kodi_movies, jelly_movies, "movie")
+    show_table = make_sync_table(
+        "🔄 Sync Comparison | Shows",
+        {path: item for path, item in plex_shows.items() if path not in on_deck_paths},
+        {path: item for path, item in kodi_shows.items() if path not in on_deck_paths},
+        {path: item for path, item in jelly_shows.items() if path not in on_deck_paths},
+        "show",
+    )
+    on_deck_table = make_sync_table(
+        "🔄 Sync Comparison | On Deck",
+        {path: item for path, item in plex_shows.items() if path in on_deck_paths},
+        {path: item for path, item in kodi_shows.items() if path in on_deck_paths},
+        {path: item for path, item in jelly_shows.items() if path in on_deck_paths},
+        "show", on_deck=True,
+    )
 
-    if movie_table.row_count > 0:
-        console.print(movie_table)
+    for table in (movie_table, show_table, on_deck_table):
+        console.print(table)
         console.print()
-    if show_table.row_count > 0:
-        console.print(show_table)
 
 
 def print_sync_results(plex_items, kodi_items, jellyfin_items, actions):
@@ -1716,7 +1758,12 @@ def print_sync_results(plex_items, kodi_items, jellyfin_items, actions):
     kodi_movies, kodi_shows = split_by_type(kodi_items)
     jelly_movies, jelly_shows = split_by_type(jellyfin_items)
 
-    def make_sync_table(title, items_plex, items_kodi, items_jelly, media_type):
+    on_deck_paths = {
+        path for path in set(plex_shows) | set(kodi_shows) | set(jelly_shows)
+        if is_on_deck_display_path(plex_shows.get(path), kodi_shows.get(path), jelly_shows.get(path))
+    }
+
+    def make_sync_table(title, items_plex, items_kodi, items_jelly, media_type, on_deck=False):
         tbl = Table(box=box.SIMPLE_HEAD, title=title, title_style="bold white", show_header=False)
         col_name = "Movie" if media_type == "movie" else "Show"
         tbl.add_column(col_name, style="white")
@@ -1728,6 +1775,11 @@ def print_sync_results(plex_items, kodi_items, jellyfin_items, actions):
         add_platform_label_row(tbl)  # 👈 added
 
         all_paths = sorted(set(items_plex) | set(items_kodi) | set(items_jelly))
+        if not all_paths:
+            tbl.add_row(
+                "No On Deck" if on_deck else f"No In Progress {'Movies' if media_type == 'movie' else 'Shows'}",
+                "", "", "", ""
+            )
 
         for idx, path in enumerate(all_paths):
             pi = items_plex.get(path)
@@ -1745,7 +1797,7 @@ def print_sync_results(plex_items, kodi_items, jellyfin_items, actions):
             jelly_time = format_time(jres)
 
             if pres == kres == jres:
-                action = "✅" if pres > 0 or media_type == "movie" else "🌱"
+                action = "🌱" if on_deck else "✅"
             else:
                 action = "⚠"
 
@@ -1764,13 +1816,25 @@ def print_sync_results(plex_items, kodi_items, jellyfin_items, actions):
 
         return tbl
 
-    movie_table = make_sync_table("✅ Sync Results", plex_movies, kodi_movies, jelly_movies, "movie")
-    show_table = make_sync_table("", plex_shows, kodi_shows, jelly_shows, "show")
+    movie_table = make_sync_table("✅ Sync Results | Movies", plex_movies, kodi_movies, jelly_movies, "movie")
+    show_table = make_sync_table(
+        "✅ Sync Results | Shows",
+        {path: item for path, item in plex_shows.items() if path not in on_deck_paths},
+        {path: item for path, item in kodi_shows.items() if path not in on_deck_paths},
+        {path: item for path, item in jelly_shows.items() if path not in on_deck_paths},
+        "show",
+    )
+    on_deck_table = make_sync_table(
+        "✅ Sync Results | On Deck",
+        {path: item for path, item in plex_shows.items() if path in on_deck_paths},
+        {path: item for path, item in kodi_shows.items() if path in on_deck_paths},
+        {path: item for path, item in jelly_shows.items() if path in on_deck_paths},
+        "show", on_deck=True,
+    )
 
-    if movie_table.row_count > 0:
-        console.print(movie_table)
-    if show_table.row_count > 0:
-        console.print(show_table)
+    for table in (movie_table, show_table, on_deck_table):
+        console.print(table)
+        console.print()
 
 ###################################################
 ############# PREVIOUS PRINT TABLE FUNCTIONS ###############
