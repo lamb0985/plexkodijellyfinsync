@@ -2,6 +2,22 @@
 
 Changes are listed here with links to the corresponding GitHub commits. This file starts with the restored single-script release; earlier history is available in [GitHub's commit history](https://github.com/lamb0985/plexkodijellyfinsync/commits/main).
 
+## 2026-11-06 — Color and size Web UI logs
+
+[Source commit `07a8b50`](https://github.com/lamb0985/plexkodijellyfinsync/commit/07a8b50dd8e8f81b0162ae53641614421e3d76be)
+
+### Changed
+
+- Replaced the dashboard's plain log textarea with a monospaced log pane that safely renders Rich ANSI colors, including 24-bit colors, without displaying escape codes. Text remains selectable; narrow windows scroll horizontally.
+- The browser reports its log-pane width in character columns. Web-triggered syncs use that width for newly generated Rich tables; resizing does not reflow earlier lines. A webhook uses the last width reported by a connected dashboard, if available. The shared log cannot simultaneously use different widths for multiple viewers.
+- Web-triggered syncs enable colored Rich output without terminal cursor animations. The normal shell Console remains unchanged.
+- The entrypoint now refreshes `flask-webhook.py` and `dashboard.html` alongside the main script in the mounted `/scripts` directory at startup. Local changes to those three files are replaced on restart. Existing Flask routes, request methods, `.env` names, sync decisions, and tracker page remain unchanged.
+
+### Verification
+
+- Python and shell syntax checks passed. Offline checks exercised ANSI color and control-code parsing, safe text insertion, browser resize reporting, width validation and subprocess environment, Rich color output at a measured width, and startup copying to a populated `/scripts` mount. Flask route names, paths, and methods were compared with the original.
+- [GitHub Actions run 42322070548](https://github.com/lamb0985/plexkodijellyfinsync/actions/runs/42322070548) built and pushed Docker Hub `latest` and `sha-07a8b50dd8e8f81b0162ae53641614421e3d76be` at digest `sha256:e891a25218796b711f09449116c8e920364413631293923b5a81d77fb423ffdb`. No live browser or three-platform sync was run on the user's host from this workspace.
+
 ## 2026-11-06 — Align Rich report columns
 
 [Source commit `b7014b0`](https://github.com/lamb0985/plexkodijellyfinsync/commit/b7014b0315fdffa0209541b42ac3c01c4fd9126b)
