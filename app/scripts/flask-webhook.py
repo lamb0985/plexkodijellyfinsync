@@ -110,7 +110,7 @@ def tracker_homepage():
     try:
         # Locates alt.html directly where app.py lives
         base_dir = Path(__file__).resolve().parent
-        paths_to_check = [base_dir / "tracker.html", base_dir / "templates" / "alt.html"]
+        paths_to_check = [Path("/scripts/tracker.html"), base_dir / "tracker.html", base_dir / "templates" / "alt.html"]
         
         for p in paths_to_check:
             if p.exists():
