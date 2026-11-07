@@ -2,6 +2,21 @@
 
 Changes are listed here with links to the corresponding GitHub commits. This file starts with the restored single-script release; earlier history is available in [GitHub's commit history](https://github.com/lamb0985/plexkodijellyfinsync/commits/main).
 
+## 2026-11-06 — Serve Web UI from image for clean rollback
+
+[Source commit `f4b2083`](https://github.com/lamb0985/plexkodijellyfinsync/commit/f4b208361b3ac1b0436fce1d602b7a586801f948)
+
+### Changed
+
+- Flask now runs from `/app/scripts/flask-webhook.py` in the image, and its dashboard loads the image's `dashboard.html`. Startup still refreshes only the main sync script in the host-mounted `/scripts`; it leaves mounted Flask and dashboard files untouched.
+- The tracker route continues to prefer the host-mounted `/scripts/tracker.html`, preserving that page and its existing URL. Existing Flask route paths, methods, `.env` names, and sync logic remain unchanged.
+- Changing to an older image tag now changes the image-served Web UI code. If the short-lived `sha-07a8b50dd8e8f81b0162ae53641614421e3d76be` image was already started, it may have overwritten host-mounted web files; restoring those files may be needed before using an older image that launches Flask from `/scripts`.
+
+### Verification
+
+- Shell and Python syntax checks passed. An isolated startup check confirmed only the main script is copied into a populated `/scripts` directory. Flask route paths and methods were checked unchanged, and the tracker lookup still checks the mounted page first.
+- [GitHub Actions run 42322384815](https://github.com/lamb0985/plexkodijellyfinsync/actions/runs/42322384815) built and pushed Docker Hub `latest` and `sha-f4b208361b3ac1b0436fce1d602b7a586801f948` at digest `sha256:9f8282a224f74572928e076ff8dcce6ef6266ea030ce9e2e4b596d0d846bbfe5`. No live sync or browser session on the user's host was run from this workspace.
+
 ## 2026-11-06 — Color and size Web UI logs
 
 [Source commit `07a8b50`](https://github.com/lamb0985/plexkodijellyfinsync/commit/07a8b50dd8e8f81b0162ae53641614421e3d76be)
@@ -11,7 +26,7 @@ Changes are listed here with links to the corresponding GitHub commits. This fil
 - Replaced the dashboard's plain log textarea with a monospaced log pane that safely renders Rich ANSI colors, including 24-bit colors, without displaying escape codes. Text remains selectable; narrow windows scroll horizontally.
 - The browser reports its log-pane width in character columns. Web-triggered syncs use that width for newly generated Rich tables; resizing does not reflow earlier lines. A webhook uses the last width reported by a connected dashboard, if available. The shared log cannot simultaneously use different widths for multiple viewers.
 - Web-triggered syncs enable colored Rich output without terminal cursor animations. The normal shell Console remains unchanged.
-- The entrypoint now refreshes `flask-webhook.py` and `dashboard.html` alongside the main script in the mounted `/scripts` directory at startup. Local changes to those three files are replaced on restart. Existing Flask routes, request methods, `.env` names, sync decisions, and tracker page remain unchanged.
+- This intermediate image copied `flask-webhook.py` and `dashboard.html` alongside the main script into mounted `/scripts` at startup. **Superseded by the image-served Web UI change above.** If this image was started, those two host files may have been overwritten. Existing Flask routes, request methods, `.env` names, sync decisions, and tracker page remained unchanged.
 
 ### Verification
 
