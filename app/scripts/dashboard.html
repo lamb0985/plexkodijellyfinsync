@@ -58,7 +58,6 @@ button:hover {
     border-color: #949eb4;
 }
 
-textarea,
 input {
     background: #1e2235;
     color: #f8f8f2;
@@ -70,12 +69,26 @@ input {
 #terminal {
     flex: 1;
     min-height: 0;
-    resize: none;
+    min-width: 0;
+    width: 100%;
+    margin: 0;
+    padding: 12px;
+    background: #1e2235;
+    color: #f8f8f2;
+    border: 1px solid #2e3450;
+    border-radius: 8px;
+    box-sizing: border-box;
+    overflow: auto;
+    white-space: pre;
+    font: 14px/1.25 ui-monospace, SFMono-Regular, Consolas, monospace;
 }
 
-textarea::placeholder,
 input::placeholder {
     color: #6272a4;
+}
+
+.log-line {
+    min-height: 1.25em;
 }
 
 pre {
@@ -122,7 +135,7 @@ pre {
     </div>
  <h3>Live Logs</h3>
 
-<textarea id="terminal" readonly style="width:100%;">Connecting to logs…</textarea>
+<div id="terminal" role="log" aria-live="off">Connecting to logs…</div>
 
 <input
     id="cmdinput"
@@ -139,22 +152,114 @@ pre {
  <script>
  const termBox = document.getElementById("terminal");
  const socket = io();
- socket.on("log_update", line => {
- termBox.value += line + "\n";
- const lines = termBox.value.split("\n");
- if (lines.length > 1000) termBox.value = lines.slice(-1000).join("\n");
- termBox.scrollTop = termBox.scrollHeight;
- });
+ const ansiColors = [
+  "#21222c", "#ff5555", "#50fa7b", "#f1fa8c",
+  "#bd93f9", "#ff79c6", "#8be9fd", "#f8f8f2",
+  "#6272a4", "#ff6e6e", "#69ff94", "#ffffa5",
+  "#d6acff", "#ff92df", "#a4ffff", "#ffffff"
+ ];
+ const ansiControl = /\x1b(?:\[([0-?]*[ -/]*)([@-~])|\][\s\S]*?(?:\x07|\x1b\\))/g;
+ let ansiStyle = {};
+ let logStarted = false;
+
+ function paletteColor(index) {
+  if (index < 16) return ansiColors[index];
+  if (index < 232) {
+   const n = index - 16;
+   const levels = [0, 95, 135, 175, 215, 255];
+   return "rgb(" + [Math.floor(n / 36), Math.floor(n / 6) % 6, n % 6]
+    .map(part => levels[part]).join(",") + ")";
+  }
+  const gray = 8 + (index - 232) * 10;
+  return "rgb(" + gray + "," + gray + "," + gray + ")";
+ }
+
+ function applySgr(parameters) {
+  const codes = parameters ? parameters.replace(/:/g, ";").split(";").map(Number) : [0];
+  for (let i = 0; i < codes.length; i++) {
+   const code = codes[i];
+   if (code === 0) ansiStyle = {};
+   else if (code === 1) ansiStyle.bold = true;
+   else if (code === 2) ansiStyle.dim = true;
+   else if (code === 3) ansiStyle.italic = true;
+   else if (code === 4) ansiStyle.underline = true;
+   else if (code === 22) { ansiStyle.bold = false; ansiStyle.dim = false; }
+   else if (code === 23) ansiStyle.italic = false;
+   else if (code === 24) ansiStyle.underline = false;
+   else if (code === 39) delete ansiStyle.color;
+   else if (code === 49) delete ansiStyle.background;
+   else if (code >= 30 && code <= 37) ansiStyle.color = ansiColors[code - 30];
+   else if (code >= 90 && code <= 97) ansiStyle.color = ansiColors[code - 90 + 8];
+   else if (code >= 40 && code <= 47) ansiStyle.background = ansiColors[code - 40];
+   else if (code >= 100 && code <= 107) ansiStyle.background = ansiColors[code - 100 + 8];
+   else if ((code === 38 || code === 48) && codes[i + 1] === 2 && i + 4 < codes.length) {
+    const rgb = codes.slice(i + 2, i + 5).map(n => Math.max(0, Math.min(255, n)));
+    ansiStyle[code === 38 ? "color" : "background"] = "rgb(" + rgb.join(",") + ")";
+    i += 4;
+   } else if ((code === 38 || code === 48) && codes[i + 1] === 5 && i + 2 < codes.length) {
+    ansiStyle[code === 38 ? "color" : "background"] = paletteColor(codes[i + 2]);
+    i += 2;
+   }
+  }
+ }
+
+ function appendStyledText(parent, value) {
+  if (!value) return;
+  const span = document.createElement("span");
+  span.textContent = value;
+  if (ansiStyle.color) span.style.color = ansiStyle.color;
+  if (ansiStyle.background) span.style.backgroundColor = ansiStyle.background;
+  if (ansiStyle.bold) span.style.fontWeight = "bold";
+  if (ansiStyle.dim) span.style.opacity = "0.7";
+  if (ansiStyle.italic) span.style.fontStyle = "italic";
+  if (ansiStyle.underline) span.style.textDecoration = "underline";
+  parent.appendChild(span);
+ }
+
+ function appendLog(data) {
+  if (!logStarted) { termBox.textContent = ""; logStarted = true; }
+  const lines = String(data).replace(/\r\n/g, "\n").replace(/\r/g, "").split("\n");
+  if (lines.length > 1 && lines[lines.length - 1] === "") lines.pop();
+  for (const line of lines) {
+   const row = document.createElement("div");
+   row.className = "log-line";
+   let start = 0;
+   ansiControl.lastIndex = 0;
+   for (const match of line.matchAll(ansiControl)) {
+    appendStyledText(row, line.slice(start, match.index));
+    if (match[2] === "m") applySgr(match[1]);
+    start = match.index + match[0].length;
+   }
+   appendStyledText(row, line.slice(start));
+   termBox.appendChild(row);
+  }
+  while (termBox.childElementCount > 1000) termBox.removeChild(termBox.firstElementChild);
+  termBox.scrollTop = termBox.scrollHeight;
+ }
+
+ function logColumns() {
+  const style = getComputedStyle(termBox);
+  const canvas = document.createElement("canvas");
+  const context = canvas.getContext("2d");
+  if (!context) return 80;
+  context.font = style.font;
+  const characterWidth = Math.max(1, context.measureText("M").width);
+  const available = termBox.clientWidth - parseFloat(style.paddingLeft) - parseFloat(style.paddingRight);
+  return Math.max(60, Math.min(240, Math.floor(available / characterWidth) - 1));
+ }
+
+ function reportLogWidth() { socket.emit("log_width", logColumns()); }
+ socket.on("connect", reportLogWidth);
+ if (window.ResizeObserver) new ResizeObserver(reportLogWidth).observe(termBox);
+ else window.addEventListener("resize", reportLogWidth);
+ socket.on("log_update", appendLog);
  document.getElementById("cmdinput").addEventListener("keypress", e => {
  if (e.key === "Enter") {
  socket.emit("run_cmd", e.target.value);
  e.target.value = "";
  }
  });
- socket.on("cmd_output", data => {
- termBox.value += data + "\n";
- termBox.scrollTop = termBox.scrollHeight;
- });
+ socket.on("cmd_output", appendLog);
  function fetchStatus() {
  fetch('/status', { credentials: 'include' })
  .then(r => r.json())
@@ -163,8 +268,8 @@ pre {
  hljs.highlightElement(document.getElementById("statusBox"));
  });
  }
- function syncNow() { fetch('/sync', { credentials: 'include' }).then(fetchStatus); }
- function resetSync() { fetch('/reset', { credentials: 'include' }).then(fetchStatus); }
+ function syncNow() { fetch('/sync?columns=' + logColumns(), { credentials: 'include' }).then(fetchStatus); }
+ function resetSync() { fetch('/reset?columns=' + logColumns(), { credentials: 'include' }).then(fetchStatus); }
  function toggleStatus() {
  const w = document.getElementById("statusBoxWrapper");
  if (w.style.display === "none") {

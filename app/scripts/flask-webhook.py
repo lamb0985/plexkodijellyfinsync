@@ -22,13 +22,28 @@ LOG_FILE = LOG_DIR / "flask.log"
 
 # Always-open, line-buffered log writer
 log_file_handle = open(LOG_FILE, "a", buffering=1)
-console = Console(file=log_file_handle, force_terminal=True, color_system="truecolor")
+console = Console(file=log_file_handle, force_terminal=True, color_system="truecolor", no_color=False)
 
 load_dotenv("/config/.env")
 SYNC_SCRIPT_FILE = os.getenv("SYNC_SCRIPT_FILE", "/scripts/plexkodijellyfinsync.py")
 SYNC_STATE_FILE = os.getenv("SYNC_STATE_FILE", "/config/.last_sync_state.json")
 FLASK_USERNAME = os.getenv("FLASK_USERNAME", "admin")
 FLASK_PASSWORD = os.getenv("FLASK_PASSWORD", "changeme")
+browser_log_columns = None
+
+def valid_log_columns(value):
+    try:
+        columns = int(value)
+    except (TypeError, ValueError):
+        return None
+    return columns if 60 <= columns <= 240 else None
+
+@socketio.on("log_width")
+def set_log_width(value):
+    global browser_log_columns
+    columns = valid_log_columns(value)
+    if columns is not None:
+        browser_log_columns = columns
 
 def check_auth(user, pw):
     return user == FLASK_USERNAME and pw == FLASK_PASSWORD
@@ -45,15 +60,21 @@ def requires_auth(f):
         return f(*a, **k)
     return wrapper
 
-def run_command_logged(cmd):
+def run_command_logged(cmd, columns=None):
+    env = os.environ.copy()
+    env["PKJSYNC_WEB_LOG"] = "1"
+    env.pop("NO_COLOR", None)
+    width = columns if columns is not None else browser_log_columns
+    if width is not None:
+        env["COLUMNS"] = str(width)
     with open(LOG_FILE, "a") as f:
-        process = subprocess.Popen(["bash", "-c", cmd], stdout=f, stderr=subprocess.STDOUT, env=os.environ.copy())
+        process = subprocess.Popen(["bash", "-c", cmd], stdout=f, stderr=subprocess.STDOUT, env=env)
         process.wait()
     console.print(f"▶ Finished command: {cmd}")
 
-def run_sync_script():
+def run_sync_script(columns=None):
     try:
-        run_command_logged(f"python {SYNC_SCRIPT_FILE} --fetched")
+        run_command_logged(f"python {SYNC_SCRIPT_FILE} --fetched", columns)
         console.print("▶ Manual sync triggered")
     except Exception as e:
         console.print(f"[red]Error starting sync:[/red] {e}")
@@ -102,7 +123,7 @@ def tracker_homepage():
 @app.route("/sync", methods=["GET", "POST"])
 #@requires_auth
 def sync():
-    threading.Thread(target=run_sync_script, daemon=True).start()
+    threading.Thread(target=run_sync_script, args=(valid_log_columns(request.args.get("columns")),), daemon=True).start()
     return jsonify({"status": "Manual sync started"}), 200
 
 @app.route("/reset", methods=["GET", "POST"])
@@ -112,7 +133,7 @@ def reset_sync():
         with open(SYNC_STATE_FILE, "w") as f:
             json.dump({}, f, indent=2)
         console.print("Sync states reset")
-        threading.Thread(target=run_sync_script, daemon=True).start()
+        threading.Thread(target=run_sync_script, args=(valid_log_columns(request.args.get("columns")),), daemon=True).start()
         return jsonify({"status": "Sync state reset, sync started"}), 200
     except Exception as e:
         console.print(f"[red]Reset failed:[/red] {e}")

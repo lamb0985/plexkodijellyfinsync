@@ -25,7 +25,7 @@ docker compose up -d
 docker logs -f plexkodijellyfinsync
 ```
 
-The example Compose file mounts only host `/config`, `/logs`, and `/scripts` directories; `/app` comes from the image. On each container start, the entrypoint copies `/app/scripts/plexkodijellyfinsync.py` into `/scripts`, replacing any older host-mounted copy. If an existing container mounts `/app`, remove that mount before updating or it will hide the new image's script. After pulling a new image, recreate the container to run the updated entrypoint. Any local edits to `/scripts/plexkodijellyfinsync.py` will be overwritten on startup. Preserve your own `/config/.env` and `/config/.last_sync_state.json`.
+The example Compose file mounts only host `/config`, `/logs`, and `/scripts` directories; `/app` comes from the image. On each container start, the entrypoint refreshes `plexkodijellyfinsync.py`, `flask-webhook.py`, and `dashboard.html` in the host-mounted `/scripts` directory from `/app/scripts`. If an existing container mounts `/app`, remove that mount before updating or it will hide the new image's files. After pulling a new image, recreate the container to run the updated entrypoint. Local edits to those three mounted files will be overwritten on startup. Preserve your own `/config/.env` and `/config/.last_sync_state.json`.
 
 The existing Flask server exposes `/`, `/plex`, `/sync`, `/cachereset`, `/status`, and `/tracker`. Configure the Plex webhook to point to the container's reachable `http://YOUR_HOST:5000/plex` address if you use Plex webhooks. The other pages and endpoints retain their existing behavior and authentication settings.
 
@@ -34,6 +34,7 @@ See the [Changelog](CHANGELOG.md) for the exact edits and verification in each d
 ## Notes
 
 - The Rich console output retains the connection messages, On Deck / Next Up, each platform's Continue Watching or In Progress table, comparison, and results.
+- The Web UI renders the Rich colors from web-triggered syncs and sizes new output to the current log panel width. Resizing does not reflow earlier log lines; narrow windows can scroll horizontally.
 - Sync state is stored at `SYNC_STATE_FILE` (normally `/config/.last_sync_state.json`).
 - The source here excludes private `.env` files and runtime logs; the template retains the original key names.
 - See [LICENSE](LICENSE) for the MIT license. Plex, Kodi, and Jellyfin names and logos belong to their respective owners; this independent project is not affiliated with them.

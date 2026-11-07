@@ -50,6 +50,10 @@ echo "🔄 Updating /scripts/plexkodijellyfinsync.py from bundled image..."
 cp -f /app/scripts/plexkodijellyfinsync.py /scripts/plexkodijellyfinsync.py
 chown "$PUID:$PGID" /scripts/plexkodijellyfinsync.py
 
+echo "🔄 Updating web log files from bundled image..."
+cp -f /app/scripts/flask-webhook.py /app/scripts/dashboard.html /scripts/
+chown "$PUID:$PGID" /scripts/flask-webhook.py /scripts/dashboard.html
+
 echo "🚀 Starting Flask webhook server in background..."
 su appuser -c "umask $UMASK && python3 /scripts/flask-webhook.py &"
 

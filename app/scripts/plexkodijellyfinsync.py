@@ -28,7 +28,8 @@ from rich import box, print
 
 # ─── Setup ─────────────────────────────────────────────────────────────────────
 install(show_locals=True)
-console = Console()
+console = (Console(force_terminal=False, color_system="truecolor")
+           if os.getenv("PKJSYNC_WEB_LOG") == "1" else Console())
 
 # Load environment from .env
 load_dotenv("/config/.env")
