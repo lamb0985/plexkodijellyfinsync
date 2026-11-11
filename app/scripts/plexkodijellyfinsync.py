@@ -1674,8 +1674,8 @@ def print_sync_comparison(plex_items, kodi_items, jellyfin_items):
         if is_on_deck_display_path(plex_shows.get(path), kodi_shows.get(path), jelly_shows.get(path))
     }
 
-    def make_sync_table(title, items_plex, items_kodi, items_jelly, media_type, on_deck=False):
-        tbl = Table(box=box.SIMPLE_HEAD, title=title, title_style="bold white", show_header=False, expand=True)
+    def make_sync_table(items_plex, items_kodi, items_jelly, media_type, on_deck=False):
+        tbl = Table(box=box.SIMPLE_HEAD, show_header=False, expand=True)
         col_name = "Movie" if media_type == "movie" else "Show"
         add_aligned_platform_columns(tbl, col_name)
 
@@ -1723,23 +1723,24 @@ def print_sync_comparison(plex_items, kodi_items, jellyfin_items):
 
         return tbl
 
-    movie_table = make_sync_table("🔄 Sync Comparison | Movies", plex_movies, kodi_movies, jelly_movies, "movie")
+    movie_table = make_sync_table(plex_movies, kodi_movies, jelly_movies, "movie")
     show_table = make_sync_table(
-        "🔄 Sync Comparison | Shows",
         {path: item for path, item in plex_shows.items() if path not in on_deck_paths},
         {path: item for path, item in kodi_shows.items() if path not in on_deck_paths},
         {path: item for path, item in jelly_shows.items() if path not in on_deck_paths},
         "show",
     )
     on_deck_table = make_sync_table(
-        "🔄 Sync Comparison | On Deck",
         {path: item for path, item in plex_shows.items() if path in on_deck_paths},
         {path: item for path, item in kodi_shows.items() if path in on_deck_paths},
         {path: item for path, item in jelly_shows.items() if path in on_deck_paths},
         "show", on_deck=True,
     )
 
-    for table in (movie_table, show_table, on_deck_table):
+    console.print("[bold white]🔄 Sync Comparison[/]", justify="center")
+    console.print()
+    for label, table in (("Movies", movie_table), ("Shows", show_table), ("On Deck", on_deck_table)):
+        console.print(f"  [bold white]{label}[/]")
         console.print(table)
         console.print()
 
@@ -1761,8 +1762,8 @@ def print_sync_results(plex_items, kodi_items, jellyfin_items, actions):
         if is_on_deck_display_path(plex_shows.get(path), kodi_shows.get(path), jelly_shows.get(path))
     }
 
-    def make_sync_table(title, items_plex, items_kodi, items_jelly, media_type, on_deck=False):
-        tbl = Table(box=box.SIMPLE_HEAD, title=title, title_style="bold white", show_header=False, expand=True)
+    def make_sync_table(items_plex, items_kodi, items_jelly, media_type, on_deck=False):
+        tbl = Table(box=box.SIMPLE_HEAD, show_header=False, expand=True)
         col_name = "Movie" if media_type == "movie" else "Show"
         add_aligned_platform_columns(tbl, col_name)
 
@@ -1810,23 +1811,24 @@ def print_sync_results(plex_items, kodi_items, jellyfin_items, actions):
 
         return tbl
 
-    movie_table = make_sync_table("✅ Sync Results | Movies", plex_movies, kodi_movies, jelly_movies, "movie")
+    movie_table = make_sync_table(plex_movies, kodi_movies, jelly_movies, "movie")
     show_table = make_sync_table(
-        "✅ Sync Results | Shows",
         {path: item for path, item in plex_shows.items() if path not in on_deck_paths},
         {path: item for path, item in kodi_shows.items() if path not in on_deck_paths},
         {path: item for path, item in jelly_shows.items() if path not in on_deck_paths},
         "show",
     )
     on_deck_table = make_sync_table(
-        "✅ Sync Results | On Deck",
         {path: item for path, item in plex_shows.items() if path in on_deck_paths},
         {path: item for path, item in kodi_shows.items() if path in on_deck_paths},
         {path: item for path, item in jelly_shows.items() if path in on_deck_paths},
         "show", on_deck=True,
     )
 
-    for table in (movie_table, show_table, on_deck_table):
+    console.print("[bold white]✅ Sync Results[/]", justify="center")
+    console.print()
+    for label, table in (("Movies", movie_table), ("Shows", show_table), ("On Deck", on_deck_table)):
+        console.print(f"  [bold white]{label}[/]")
         console.print(table)
         console.print()
 
