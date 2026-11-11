@@ -2,6 +2,20 @@
 
 Changes are listed here with links to the corresponding GitHub commits. This file starts with the restored single-script release; earlier history is available in [GitHub's commit history](https://github.com/lamb0985/plexkodijellyfinsync/commits/main).
 
+## 2026-11-10 — Simplify comparison and results headings
+
+[Source commit `5ad62d5`](https://github.com/lamb0985/plexkodijellyfinsync/commit/5ad62d52ca0573ebf7131968a0311d5e1c63904b)
+
+### Changed
+
+- **Sync Comparison** and **Sync Results** now each have one centered main heading. Movies, Shows, and On Deck appear as left-aligned labels above their existing tables, in that order.
+- Platform columns, item rows, empty-state wording, status symbols, sync decisions, authentication, `.env` names, and Flask pages/endpoints remain unchanged.
+
+### Verification
+
+- Python syntax compilation passed. The actual Rich report functions rendered offline at 84 and 120 columns with mixed Movies, Shows, On Deck, and empty data; the single heading and labels were checked without overflow. No live three-platform sync was run.
+- [GitHub Actions run 42930222234](https://github.com/lamb0985/plexkodijellyfinsync/actions/runs/42930222234) built and pushed Docker Hub `latest` and `sha-5ad62d52ca0573ebf7131968a0311d5e1c63904b` at digest `sha256:ad8be5fff7e6a1cbfb1745b5b6a4f841e522872341d3ecb9fb8893148a2270c4`.
+
 ## 2026-11-06 — Serve Web UI from image for clean rollback
 
 [Source commit `f4b2083`](https://github.com/lamb0985/plexkodijellyfinsync/commit/f4b208361b3ac1b0436fce1d602b7a586801f948)
