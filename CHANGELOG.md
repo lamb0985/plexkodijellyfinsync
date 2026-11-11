@@ -2,6 +2,21 @@
 
 Changes are listed here with links to the corresponding GitHub commits. This file starts with the restored single-script release; earlier history is available in [GitHub's commit history](https://github.com/lamb0985/plexkodijellyfinsync/commits/main).
 
+## 2026-11-10 — Add Web UI environment editor
+
+[Source commit `4c1e2f5`](https://github.com/lamb0985/plexkodijellyfinsync/commit/4c1e2f5bc5e0414739ccb0697640cff054cedcb6)
+
+### Changed
+
+- Added an **Environment** button and a dedicated authenticated `/env` page to view and edit the complete host-mounted `/config/.env`. Saves validate .env syntax, reject stale forms, preserve existing file permissions and layout, and use an atomic replacement. Restart the container after saving to apply edits.
+- Added optional `FLASK_WEBUI_AUTH=true` to require the existing `FLASK_USERNAME` and `FLASK_PASSWORD` on the dashboard, tracker, sync/status pages, and Socket.IO command connection. It defaults to off so existing page access stays the same; `/env` always requires configured credentials. Plex webhook `POST /plex` remains available without Basic authentication.
+- Documented the security limitation of leaving the dashboard command socket open and the exact steps to enable Web UI authentication. Existing .env names, sync code and logic, log formatting, and existing route paths and methods were not changed.
+
+### Verification
+
+- Python syntax compilation passed. Isolated Flask and Socket.IO tests checked both authentication modes, the editor's read/write access, CSRF rejection, stale-form rejection, invalid syntax rejection, HTML escaping, comment preservation and file permissions, and webhook access. Existing route paths and methods were compared with the previous source. No live sync or browser test on the user's host was run.
+- [GitHub Actions run 42935582087](https://github.com/lamb0985/plexkodijellyfinsync/actions/runs/42935582087) built and pushed Docker Hub `latest` and `sha-4c1e2f5bc5e0414739ccb0697640cff054cedcb6` at digest `sha256:5d39eb730cf760fa9628c181b566889d1fabf6a81634fb418aaef4c2f70f6d58`.
+
 ## 2026-11-10 — Simplify comparison and results headings
 
 [Source commit `5ad62d5`](https://github.com/lamb0985/plexkodijellyfinsync/commit/5ad62d52ca0573ebf7131968a0311d5e1c63904b)
