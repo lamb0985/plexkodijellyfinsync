@@ -4,16 +4,22 @@ import os
 import subprocess
 import threading
 import json
-from flask import Flask, request, jsonify, Response
+import secrets
+import tempfile
+import stat
+import hashlib
+from io import StringIO
+from flask import Flask, request, jsonify, Response, session, render_template_string, make_response
 from flask_socketio import SocketIO, emit
-from dotenv import load_dotenv
+from dotenv import load_dotenv, dotenv_values
+from dotenv.parser import parse_stream
 from pathlib import Path
 from collections import OrderedDict
 from functools import wraps
 from rich.console import Console
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = os.getenv("SECRET_KEY", "supersecretkey")
+app.config['SECRET_KEY'] = os.getenv("SECRET_KEY") or secrets.token_hex(32)
 socketio = SocketIO(app, async_mode="eventlet")
 
 LOG_DIR = Path("/logs")
@@ -29,7 +35,15 @@ SYNC_SCRIPT_FILE = os.getenv("SYNC_SCRIPT_FILE", "/scripts/plexkodijellyfinsync.
 SYNC_STATE_FILE = os.getenv("SYNC_STATE_FILE", "/config/.last_sync_state.json")
 FLASK_USERNAME = os.getenv("FLASK_USERNAME", "admin")
 FLASK_PASSWORD = os.getenv("FLASK_PASSWORD", "changeme")
+FLASK_WEBUI_AUTH = os.getenv("FLASK_WEBUI_AUTH", "false").lower() in ("true", "1", "yes", "on")
+ENV_PATH = Path("/config/.env")
+ENV_CSRF_TOKEN = secrets.token_urlsafe(32)
 browser_log_columns = None
+
+@socketio.on("connect")
+def authorize_socket(auth=None):
+    if FLASK_WEBUI_AUTH and not session.get("webui_authenticated"):
+        return False
 
 def valid_log_columns(value):
     try:
@@ -46,7 +60,10 @@ def set_log_width(value):
         browser_log_columns = columns
 
 def check_auth(user, pw):
-    return user == FLASK_USERNAME and pw == FLASK_PASSWORD
+    return (bool(FLASK_USERNAME and FLASK_PASSWORD)
+            and (FLASK_USERNAME, FLASK_PASSWORD) != ("admin", "changeme")
+            and secrets.compare_digest((user or "").encode("utf-8"), FLASK_USERNAME.encode("utf-8"))
+            and secrets.compare_digest((pw or "").encode("utf-8"), FLASK_PASSWORD.encode("utf-8")))
 
 def authenticate():
     return Response("Auth required", 401, {"WWW-Authenticate": 'Basic realm="Login Required"'})
@@ -55,10 +72,78 @@ def requires_auth(f):
     @wraps(f)
     def wrapper(*a, **k):
         auth = request.authorization
-        if not auth or not check_auth(auth.username, auth.password):
+        if not (FLASK_WEBUI_AUTH and session.get("webui_authenticated")) and not (
+            auth and check_auth(auth.username, auth.password)
+        ):
             return authenticate()
         return f(*a, **k)
     return wrapper
+
+@app.before_request
+def protect_optional_webui():
+    # Plex webhooks retain their existing unauthenticated POST contract.
+    if not FLASK_WEBUI_AUTH or request.path == "/plex":
+        return None
+    if session.get("webui_authenticated"):
+        return None
+    auth = request.authorization
+    if auth and check_auth(auth.username, auth.password):
+        session["webui_authenticated"] = True
+        return None
+    return authenticate()
+
+def env_page(message="", error="", status=200, proposed_contents=None):
+    template = (Path(__file__).resolve().parent / "env.html").read_text(encoding="utf-8")
+    current_contents = ENV_PATH.read_text(encoding="utf-8") if ENV_PATH.exists() else ""
+    contents = current_contents if proposed_contents is None else proposed_contents
+    file_version = hashlib.sha256(current_contents.encode("utf-8")).hexdigest()
+    response = make_response(render_template_string(
+        template, contents=contents, csrf_token=ENV_CSRF_TOKEN, file_version=file_version,
+        message=message, error=error,
+    ), status)
+    response.headers["Cache-Control"] = "no-store"
+    response.headers["Referrer-Policy"] = "no-referrer"
+    response.headers["X-Content-Type-Options"] = "nosniff"
+    return response
+
+@app.route("/env", methods=["GET", "POST"])
+@requires_auth
+def edit_env():
+    if request.method == "GET":
+        return env_page()
+    contents = request.form.get("contents")
+    submitted_token = request.form.get("csrf_token", "")
+    if not secrets.compare_digest(submitted_token, ENV_CSRF_TOKEN):
+        return env_page(error="Invalid form token. Reload and try again.", status=403)
+    if contents is None or len(contents.encode("utf-8")) > 65536:
+        return env_page(error="The configuration is missing or too large.", status=400)
+    current_contents = ENV_PATH.read_text(encoding="utf-8") if ENV_PATH.exists() else ""
+    file_version = hashlib.sha256(current_contents.encode("utf-8")).hexdigest()
+    if not secrets.compare_digest(request.form.get("file_version", ""), file_version):
+        return env_page(error="The file changed since you opened this page. Reload before saving.", status=409)
+    if any(binding.error for binding in parse_stream(StringIO(contents))):
+        return env_page(error="The configuration contains an invalid .env line.", status=400,
+                        proposed_contents=contents)
+    values = dotenv_values(stream=StringIO(contents))
+    if not values.get("FLASK_USERNAME") or not values.get("FLASK_PASSWORD"):
+        return env_page(error="Keep FLASK_USERNAME and FLASK_PASSWORD set to use this editor.", status=400,
+                        proposed_contents=contents)
+    temporary_path = None
+    try:
+        existing_mode = stat.S_IMODE(ENV_PATH.stat().st_mode)
+        fd, temporary_path = tempfile.mkstemp(prefix=".env-", dir=ENV_PATH.parent)
+        os.fchmod(fd, existing_mode)
+        with os.fdopen(fd, "w", encoding="utf-8", newline="") as output:
+            output.write(contents)
+            output.flush()
+            os.fsync(output.fileno())
+        os.replace(temporary_path, ENV_PATH)
+    except OSError:
+        return env_page(error="Could not save /config/.env. Check its permissions.", status=500)
+    finally:
+        if temporary_path and os.path.exists(temporary_path):
+            os.unlink(temporary_path)
+    return env_page(message="Saved /config/.env. Restart the container to apply the new settings.")
 
 def run_command_logged(cmd, columns=None):
     env = os.environ.copy()

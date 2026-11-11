@@ -27,7 +27,19 @@ docker logs -f plexkodijellyfinsync
 
 The example Compose file mounts only host `/config`, `/logs`, and `/scripts` directories; `/app` comes from the image. On each container start, the entrypoint refreshes `/scripts/plexkodijellyfinsync.py` from the image. The Flask server and dashboard run from `/app/scripts`, so pulling an older image restores their earlier versions without overwriting host-mounted web files. Local edits to the mounted main script will be overwritten on startup; edits to `/scripts/flask-webhook.py` or `/scripts/dashboard.html` do not affect the image-served Web UI. If an existing container mounts `/app`, remove that mount before updating. After pulling an image, recreate the container to use it. Preserve your own `/config/.env` and `/config/.last_sync_state.json`.
 
-The existing Flask server exposes `/`, `/plex`, `/sync`, `/cachereset`, `/status`, and `/tracker`. Configure the Plex webhook to point to the container's reachable `http://YOUR_HOST:5000/plex` address if you use Plex webhooks. The other pages and endpoints retain their existing behavior and authentication settings.
+The Flask server exposes `/`, `/plex`, `/sync`, `/reset`, `/status`, `/tracker`, and `/env`. Configure the Plex webhook to point to the container's reachable `http://YOUR_HOST:5000/plex` address if you use Plex webhooks.
+
+## Edit the environment file in the Web UI
+
+Click **Environment** on the main dashboard, or open `/env` directly. The page displays the complete mounted `/config/.env` file for editing, including passwords and tokens, and saves it without rearranging comments or blank lines. It requires HTTP Basic authentication using the existing `FLASK_USERNAME` and `FLASK_PASSWORD` from `/config/.env`. Set both to your own nonempty values before opening the editor; the built-in `admin` / `changeme` fallback cannot access it. Restart the container after saving to apply the settings. Keep the page private and use HTTPS through a reverse proxy if accessing it beyond your trusted network.
+
+By default, the other Web UI pages and its live command socket retain their existing access behavior. **Protecting only `/env` does not protect the file**: the dashboard's command box can run shell commands. To require the same username and password across the dashboard, tracker, sync/status pages, and command socket, add this line to your host's `/config/.env` alongside `FLASK_USERNAME` and `FLASK_PASSWORD`:
+
+```dotenv
+FLASK_WEBUI_AUTH=true
+```
+
+Then restart the container. Your browser will prompt for those credentials when visiting `/`. The Plex webhook at `/plex` remains available to Plex without Basic authentication. To return to the previous Web UI access behavior, set `FLASK_WEBUI_AUTH=false` and restart; `/env` always requires credentials. Do not expose port 5000 directly to untrusted networks: when Web UI authentication is off, the command socket can access files and run commands inside the container.
 
 See the [Changelog](CHANGELOG.md) for the exact edits and verification in each documented update.
 
