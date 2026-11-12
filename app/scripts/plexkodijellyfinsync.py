@@ -11,7 +11,7 @@ from datetime import datetime
 # ─── Third-Party Libraries ─────────────────────────────────────────────────────
 import requests
 import pymysql
-from dotenv import load_dotenv, set_key
+from dotenv import load_dotenv, set_key, dotenv_values
 from requests.auth import HTTPBasicAuth
 from plexapi.server import PlexServer
 from collections import defaultdict
@@ -262,6 +262,12 @@ def kodi_rpc(method, params=None):
 
 # Authenticate against Jellyfin and retrieve a valid token and user ID (or refresh if expired)
 def get_jellyfin_token():
+    # Read the persisted credentials directly; Web UI child processes can inherit
+    # stale values from Flask's environment after a previous reauthentication.
+    saved_env = dotenv_values(env_path)
+    saved_token = saved_env.get("JELLYFIN_TOKEN") or ""
+    saved_user_id = saved_env.get("JELLYFIN_USER_ID") or ""
+
     def authenticate():
         try:
             headers = {
@@ -291,17 +297,17 @@ def get_jellyfin_token():
             raise
 
     # If missing token or user ID, authenticate
-    if not JELLYFIN_TOKEN or not JELLYFIN_USER_ID:
+    if not saved_token or not saved_user_id:
         console.print("[yellow]⚠️ No Jellyfin token/user ID. Authenticating...[/]")
         return authenticate()
 
     try:
         r = requests.get(
             f"{JELLYFIN_SERVER}/Users/Me",
-            headers={"Authorization": f'MediaBrowser Token="{JELLYFIN_TOKEN}"'},
+            headers={"Authorization": f'MediaBrowser Token="{saved_token}"'},
             timeout=5)
         if r.status_code == 200:
-            return JELLYFIN_TOKEN, JELLYFIN_USER_ID
+            return saved_token, saved_user_id
         console.print(f"[yellow]⚠️ Invalid Jellyfin token (status {r.status_code}), reauthenticating...[/]")
     except Exception as e:
         console.print(f"[yellow]⚠️ Token check failed: {e}, reauthenticating...[/]")
