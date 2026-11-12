@@ -14,7 +14,7 @@ Changes are listed here with links to the corresponding GitHub commits. This fil
 ### Verification and release
 
 - Python syntax compilation passed. An isolated authentication test with a stale inherited token confirmed that the file's token is used, a rejected file token is replaced through the existing login flow, and the next attempt uses the newly saved token without another login. No live three-server sync was run.
-- [GitHub Actions run 43333182677](https://github.com/lamb0985/plexkodijellyfinsync/actions/runs/43333182677) built and pushed Docker Hub `latest` and rollback tag `sha-e2e389ef4b40ee87720fe7133040e9ea55a8dc79` at digest `sha256:0876e202eea90cad3f54a27f10cc8ddef33a938f5256e0a36699c9fab9870f1f`. To return to the previous image, use `sha-f95e1b11032f70b0e219025d14309dc410b56531`.
+- [GitHub Actions run 43333182677](https://github.com/lamb0985/plexkodijellyfinsync/actions/runs/43333182677) built and pushed Docker Hub `latest` and rollback tag `sha-e2e389ef4b40ee87720fe7133040e9ea55a8dc79` at digest `sha256:0876e202eea90cad3f54a27f10cc8ddef33a938f5256e0a36699c9fab9870f1f`. To return to the previous image, use `sha-4c1e2f5bc5e0414739ccb0697640cff054cedcb6` (the prior source commit `f95e1b1` only changed this changelog, so it did not publish an image).
 
 ## 2026-11-10 — Add Web UI environment editor
 
