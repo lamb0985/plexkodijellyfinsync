@@ -2,6 +2,20 @@
 
 Changes are listed here with links to the corresponding GitHub commits. This file starts with the restored single-script release; earlier history is available in [GitHub's commit history](https://github.com/lamb0985/plexkodijellyfinsync/commits/main).
 
+## 2026-11-12 — Reuse refreshed Jellyfin token on subsequent syncs
+
+[Source commit `e2e389e`](https://github.com/lamb0985/plexkodijellyfinsync/commit/e2e389ef4b40ee87720fe7133040e9ea55a8dc79) · [Previous commit for rollback `f95e1b1`](https://github.com/lamb0985/plexkodijellyfinsync/commit/f95e1b11032f70b0e219025d14309dc410b56531)
+
+### Changed
+
+- Jellyfin authentication now reads `JELLYFIN_TOKEN` and `JELLYFIN_USER_ID` directly from `/config/.env` at the start of each sync. A Web UI sync no longer reuses token values inherited from the long-running Flask process after the prior sync has reauthenticated.
+- The existing 401 reauthentication and `.env` rewrite remain in place. No other authentication, playback sync, Flask routes, or environment variable names changed.
+
+### Verification and release
+
+- Python syntax compilation passed. An isolated authentication test with a stale inherited token confirmed that the file's token is used, a rejected file token is replaced through the existing login flow, and the next attempt uses the newly saved token without another login. No live three-server sync was run.
+- [GitHub Actions run 43333182677](https://github.com/lamb0985/plexkodijellyfinsync/actions/runs/43333182677) built and pushed Docker Hub `latest` and rollback tag `sha-e2e389ef4b40ee87720fe7133040e9ea55a8dc79` at digest `sha256:0876e202eea90cad3f54a27f10cc8ddef33a938f5256e0a36699c9fab9870f1f`. To return to the previous image, use `sha-f95e1b11032f70b0e219025d14309dc410b56531`.
+
 ## 2026-11-10 — Add Web UI environment editor
 
 [Source commit `4c1e2f5`](https://github.com/lamb0985/plexkodijellyfinsync/commit/4c1e2f5bc5e0414739ccb0697640cff054cedcb6)
