@@ -2,6 +2,23 @@
 
 Changes are listed here with links to the corresponding GitHub commits. This file starts with the restored single-script release; earlier history is available in [GitHub's commit history](https://github.com/lamb0985/plexkodijellyfinsync/commits/main).
 
+## 2026-11-23 — Align log sections and retain measured output width
+
+[Log layout commit `fc596b3`](https://github.com/lamb0985/plexkodijellyfinsync/commit/fc596b3f1888b3fc27116cfaa2fbaead39295d85) · [Cross-page width correction `3cfae58`](https://github.com/lamb0985/plexkodijellyfinsync/commit/3cfae5851406f8c222e3b9b5598650672270fe81)
+
+### Changed
+
+- Removed Dashboard's Activity heading, description, and Live log badge, leaving the Live Logs toolbar and colored log pane.
+- Left-aligned the initial Movies, Shows, and On Deck | Next Up headings and platform table titles. Comparison and Results use icon-before-title headings for all three categories, with the full On Deck | Next Up label. Compact Rich tables remove the extra blank line between each section title and its platform columns.
+- Fixed a width regression in Sync/Reset controls on Tracker, Environment, and Status. These pages now measure the current viewport's dashboard-equivalent log width and pass `columns` to the existing endpoints. Dashboard still measures its actual log pane. Existing saved output retains its original width; new sync output uses the measured width at action time.
+
+### Verification and rollback
+
+- Python syntax passed. Actual Rich report functions rendered at 84 and 120 columns with left-aligned section headings and no blank line below them. Dashboard log and command controls remained. JavaScript syntax passed for Tracker, Environment, and Status; width calculation was checked at 500, 900, and 1700 pixels. No live Organizr or three-server sync was run.
+- [Log layout build 45251229523](https://github.com/lamb0985/plexkodijellyfinsync/actions/runs/45251229523) pushed `sha-fc596b3f1888b3fc27116cfaa2fbaead39295d85` at digest `sha256:6af3909e5c653aa2f1969d0ddcaa7805cd47714d5d0e5eb9e13da21f35f70478`.
+- [Final GitHub Actions run 45251706016](https://github.com/lamb0985/plexkodijellyfinsync/actions/runs/45251706016) pushed Docker Hub `latest` and `sha-3cfae5851406f8c222e3b9b5598650672270fe81` at digest `sha256:b699856596eb446e9ccffda2e1837f98e3576d05e09e6223f966e61595c87d6a`.
+- Previous image rollback tag: `sha-fc596b3f1888b3fc27116cfaa2fbaead39295d85`. To roll back both changes, use `sha-191787115be92c38680647255cabe828e18b19e7`.
+
 ## 2026-11-23 — Prune cleared movies and align log section icons
 
 [Source commit `1917871`](https://github.com/lamb0985/plexkodijellyfinsync/commit/191787115be92c38680647255cabe828e18b19e7) · [Previous source commit `e9890c1`](https://github.com/lamb0985/plexkodijellyfinsync/commit/e9890c1dce6e668a722998e77796ca33c7cd1a2e)
