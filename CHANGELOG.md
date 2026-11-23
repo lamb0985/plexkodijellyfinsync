@@ -2,6 +2,22 @@
 
 Changes are listed here with links to the corresponding GitHub commits. This file starts with the restored single-script release; earlier history is available in [GitHub's commit history](https://github.com/lamb0985/plexkodijellyfinsync/commits/main).
 
+## 2026-11-23 — Unify page navigation and simplify Dashboard
+
+[Source commit `6fb57ca`](https://github.com/lamb0985/plexkodijellyfinsync/commit/6fb57caf934c0e59db319b0babe0d369cb473795) · [Previous source commit `9703d40`](https://github.com/lamb0985/plexkodijellyfinsync/commit/9703d40edf9b8d11fbcc43a5d2e5ed929e7ad97a)
+
+### Changed
+
+- Tracker and Environment now display the same logo/header area, Dashboard/Tracker/Environment navigation, and Sync now, Reset, and Status controls in the same positions as Dashboard. Status opens an on-page JSON dialog with Copy; Tracker refreshes its entries after a Sync or Reset. The Environment editor and dashboard command field remain available.
+- Removed the four summary counters from Dashboard, leaving more space for the colored log. The log pane grows with viewport height and scrolls horizontally for long lines.
+- Constrained the dashboard grid and card to the available frame width to prevent long log lines from widening the page and clipping its right margin inside Organizr. Tracker and Environment use the same full-width content gutters.
+
+### Verification and rollback
+
+- HTML structure, navigation, actions, dashboard log and command controls, and Environment form fields were checked. Inline JavaScript passed `node --check` for all three pages. A local Chromium visual check was blocked by this environment; the layout has not been verified in the user's Organizr instance.
+- [GitHub Actions run 45245772864](https://github.com/lamb0985/plexkodijellyfinsync/actions/runs/45245772864) built and pushed Docker Hub `latest` and `sha-6fb57caf934c0e59db319b0babe0d369cb473795` at digest `sha256:0dad0bfa99db0959fd039f0d6edfaad64d41a5268b1c42a53cae62853e668e19`.
+- Previous image rollback tag: `sha-2124859cb3bbe2efb14efb6d4676b1d4b63d08d4`.
+
 ## 2026-11-23 — Show saved logs when the dashboard opens
 
 [Source commit `2124859`](https://github.com/lamb0985/plexkodijellyfinsync/commit/2124859cb3bbe2efb14efb6d4676b1d4b63d08d4) · [Previous source commit for rollback `c19324d`](https://github.com/lamb0985/plexkodijellyfinsync/commit/c19324da87a428826e91526343e2469c72d2037f)
