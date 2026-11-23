@@ -52,7 +52,8 @@
       font-size:14px; font-weight:700; cursor:pointer; color:var(--muted);
     }
     .pkjs-app .nav button[aria-selected="true"] { background:#3a3b52; color:var(--text); box-shadow:inset 0 -2px 0 var(--purple); }
-    .pkjs-app main { padding:23px 26px 30px; display:grid; gap:18px; }
+    .pkjs-app main { padding:23px 26px 30px; display:grid; grid-template-columns:minmax(0,1fr); gap:18px; min-width:0; }
+    .pkjs-app main > *, .pkjs-app .card { min-width:0; }
     .pkjs-app .overview { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:12px; }
     .pkjs-app .card {
       background:linear-gradient(180deg,rgba(52,55,70,.3),rgba(33,34,44,.98));
@@ -127,7 +128,7 @@ html,body{margin:0;min-height:100%;background:#282a36}
 .pkjs-app .nav a{display:inline-block;border-radius:8px;padding:8px 13px;color:var(--muted);text-decoration:none;font-size:14px;font-weight:700}
 .pkjs-app .nav a:hover,.pkjs-app .nav a.active{background:#3a3b52;color:var(--text)}
 .pkjs-app .nav a.active{box-shadow:inset 0 -2px 0 var(--purple)}
-.pkjs-app .log{height:min(48vh,520px);min-height:290px;overflow:auto}
+.pkjs-app .log{width:100%;max-width:100%;height:clamp(360px,calc(100vh - 380px),820px);overflow:auto}
 .pkjs-app .status-panel{display:none}
 .pkjs-app .status-panel.open{display:block}
 @media(max-width:560px){.pkjs-app .overview{grid-template-columns:repeat(2,minmax(0,1fr))}}
@@ -135,8 +136,8 @@ html,body{margin:0;min-height:100%;background:#282a36}
 <div class="pkjs-app">
 <header class="top"><div class="brand"><div class="logo-frame"><img src="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2232%22%20height%3D%2232%22%20viewBox%3D%220%200%2032%2032%22%20role%3D%22img%22%20aria-labelledby%3D%22title%22%3E%0A%20%20%3Ctitle%20id%3D%22title%22%3EPlex%20Kodi%20Jellyfin%20Sync%20icon%3C%2Ftitle%3E%0A%20%20%3Crect%20width%3D%2232%22%20height%3D%2232%22%20rx%3D%227%22%20fill%3D%22%23101827%22%2F%3E%0A%20%20%3Ccircle%20cx%3D%2216%22%20cy%3D%2216%22%20r%3D%2211.3%22%20fill%3D%22none%22%20stroke%3D%22%23253247%22%20stroke-width%3D%223%22%2F%3E%0A%20%20%3Cpath%20d%3D%22M16%204.7a11.3%2011.3%200%200%201%209.8%205.65%22%20fill%3D%22none%22%20stroke%3D%22%23e5a72d%22%20stroke-width%3D%223%22%20stroke-linecap%3D%22round%22%2F%3E%0A%20%20%3Cpath%20d%3D%22M25.8%2021.65A11.3%2011.3%200%200%201%206.2%2021.65%22%20fill%3D%22none%22%20stroke%3D%22%238e69de%22%20stroke-width%3D%223%22%20stroke-linecap%3D%22round%22%2F%3E%0A%20%20%3Cpath%20d%3D%22M6.2%2010.35A11.3%2011.3%200%200%201%2011.6%205.6%22%20fill%3D%22none%22%20stroke%3D%22%2331a5df%22%20stroke-width%3D%223%22%20stroke-linecap%3D%22round%22%2F%3E%0A%20%20%3Cpath%20d%3D%22M13%2010.7%2021.5%2016%2013%2021.3Z%22%20fill%3D%22%23f5f8ff%22%2F%3E%0A%3C%2Fsvg%3E%0A" width="48" height="48" alt="Plex Kodi Jellyfin Sync logo"></div><div><div class="eyebrow">Plex · Kodi · Jellyfin</div><h1>Sync Dashboard</h1></div></div><div class="header-actions"><button class="button primary" onclick="syncNow()">Sync now</button><button class="button danger" onclick="resetSync()">Reset</button><button class="button subtle" onclick="toggleStatus()">Status</button></div></header>
 <nav class="nav" aria-label="Pages"><a class="active" href="/" aria-current="page">Dashboard</a><a href="/tracker">Tracker</a><a href="/env">Environment</a></nav>
-<main><section class="overview" aria-label="Sync overview"><article class="card metric"><span class="label">Tracked items</span><strong id="trackedCount">—</strong><small>Saved sync state</small></article><article class="card metric"><span class="label">Movies</span><strong id="movieCount">—</strong><small>In progress</small></article><article class="card metric"><span class="label">Shows</span><strong id="showCount">—</strong><small>In progress</small></article><article class="card metric"><span class="label">On Deck</span><strong id="onDeckCount">—</strong><small>Episodes up next</small></article></section>
-<section class="card"><div class="section-head"><div><h2>Activity</h2><p>Playback progress across Plex, Kodi, and Jellyfin.</p></div><span class="badge">Live log</span></div><div class="log-head"><span class="label">Live Logs</span><button class="text-button" type="button" onclick="document.getElementById('terminal').scrollTop=document.getElementById('terminal').scrollHeight">Jump to latest</button></div><div id="terminal" class="log" role="log" aria-live="off">Connecting to logs…</div><label for="cmdinput" class="label" style="display:block;margin-top:14px">Command</label><input id="cmdinput" class="terminal-input" placeholder="Type command and press Enter" autocomplete="off"></section>
+<main>
+<section class="card"><div class="section-head"><div><h2>Activity</h2><p>Recent sync output from Plex, Kodi, and Jellyfin.</p></div><span class="badge">Live log</span></div><div class="log-head"><span class="label">Live Logs</span><button class="text-button" type="button" onclick="document.getElementById('terminal').scrollTop=document.getElementById('terminal').scrollHeight">Jump to latest</button></div><div id="terminal" class="log" role="log" aria-live="off">Connecting to logs…</div><label for="cmdinput" class="label" style="display:block;margin-top:14px">Command</label><input id="cmdinput" class="terminal-input" placeholder="Type command and press Enter" autocomplete="off"></section>
 <section id="statusBoxWrapper" class="card status-panel"><div class="section-head"><h2>Sync Status</h2><button class="button" id="copyBtn" onclick="copyStatus()">Copy</button></div><pre><code id="statusBox" class="json">No status yet.</code></pre></section></main></div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.min.js"></script>
  <script>
@@ -272,28 +273,10 @@ html,body{margin:0;min-height:100%;background:#282a36}
  }
  });
  socket.on("cmd_output", () => { setTimeout(refreshLog, 250); });
- function updateSummary(data) {
- const entries = Object.values(data.data || {});
- const kinds = {movies:0,shows:0,onDeck:0};
- entries.forEach(entry => {
-  const platforms = [entry.plex,entry.kodi,entry.jellyfin].filter(Boolean);
-  const episode = platforms.some(p => p.media_type === "episode");
-  const movie = platforms.some(p => p.media_type === "movie");
-  const inProgress = platforms.some(p => Number(p.resume || 0) > 0 && p.status !== "watched");
-  if (inProgress && movie) kinds.movies++;
-  if (inProgress && episode) kinds.shows++;
-  if (episode && !inProgress && platforms.some(p => p.status === "unwatched") && platforms.every(p => p.status !== "watched")) kinds.onDeck++;
- });
- document.getElementById("trackedCount").textContent = entries.length;
- document.getElementById("movieCount").textContent = kinds.movies;
- document.getElementById("showCount").textContent = kinds.shows;
- document.getElementById("onDeckCount").textContent = kinds.onDeck;
- }
  function fetchStatus() {
  fetch('/status', { credentials: 'include' })
  .then(r => r.json())
  .then(data => {
- updateSummary(data);
  document.getElementById("statusBox").textContent = JSON.stringify(data, null, 2);
  hljs.highlightElement(document.getElementById("statusBox"));
  });
