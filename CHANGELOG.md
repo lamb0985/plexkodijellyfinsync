@@ -2,6 +2,22 @@
 
 Changes are listed here with links to the corresponding GitHub commits. This file starts with the restored single-script release; earlier history is available in [GitHub's commit history](https://github.com/lamb0985/plexkodijellyfinsync/commits/main).
 
+## 2026-11-23 — Restyle Web UI with Plex EPG theme
+
+[Source commit `28b1910`](https://github.com/lamb0985/plexkodijellyfinsync/commit/28b191084579f077131002838fd8e8ca68d5e599)
+
+### Changed
+
+- Restyled the dashboard, Tracker, and Environment pages using the Plex EPG Dracula palette, card layout, header treatment, and the existing Plex Kodi Jellyfin Sync logo. The logo is embedded in the pages; the source image assets were not altered.
+- Kept dashboard Sync, Reset, Status/Copy, live colored logs, measured log width, and command input; kept Tracker's existing status parsing and platform progress; kept the authenticated `/env` editor, CSRF fields, and file contents form.
+- Added dashboard summary counts derived from the existing `/status` response. No Flask routes, sync decisions, or API names changed.
+
+### Verification and rollback
+
+- HTML IDs, navigation links, dashboard controls, Environment form fields, and embedded logo were checked; the inline dashboard and Tracker JavaScript passed `node --check`. A live browser and three-server sync were not run.
+- [GitHub Actions run 45242126642](https://github.com/lamb0985/plexkodijellyfinsync/actions/runs/45242126642) built and pushed Docker Hub `latest` and `sha-28b191084579f077131002838fd8e8ca68d5e599` at digest `sha256:524f64de98b1dcb7f1a1cea747b16db051df8047176efbca732e057155e820af`.
+- Previous image rollback tag: `sha-2f18a8c1a53a8867597362f621aa5d2ee2ecf97c`.
+
 ## 2026-11-12 — Reuse refreshed Jellyfin token on subsequent syncs
 
 [Source commit `e2e389e`](https://github.com/lamb0985/plexkodijellyfinsync/commit/e2e389ef4b40ee87720fe7133040e9ea55a8dc79) · [Previous commit for rollback `f95e1b1`](https://github.com/lamb0985/plexkodijellyfinsync/commit/f95e1b11032f70b0e219025d14309dc410b56531)
