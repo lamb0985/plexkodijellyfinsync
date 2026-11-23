@@ -2,6 +2,21 @@
 
 Changes are listed here with links to the corresponding GitHub commits. This file starts with the restored single-script release; earlier history is available in [GitHub's commit history](https://github.com/lamb0985/plexkodijellyfinsync/commits/main).
 
+## 2026-11-23 — Show saved logs when the dashboard opens
+
+[Source commit `2124859`](https://github.com/lamb0985/plexkodijellyfinsync/commit/2124859cb3bbe2efb14efb6d4676b1d4b63d08d4) · [Previous source commit for rollback `c19324d`](https://github.com/lamb0985/plexkodijellyfinsync/commit/c19324da87a428826e91526343e2469c72d2037f)
+
+### Changed
+
+- The dashboard fetches a bounded tail of the saved `/logs/flask.log` immediately and every five seconds, so previous sync output appears without starting a new sync. The new authenticated `GET /api/logs` returns plain text with caching disabled.
+- The existing safe ANSI parser still renders Rich colors. A snapshot refresh avoids duplicate lines, preserves the user's scroll position while reading earlier output, and refreshes summary counts when the log changes. Command execution and its Socket.IO connection remain available.
+
+### Verification and rollback
+
+- Python compilation and dashboard JavaScript syntax checks passed. Isolated route checks covered ANSI bytes, a missing log file, and bounded history. No live browser or three-server sync was run.
+- [GitHub Actions run 45243716752](https://github.com/lamb0985/plexkodijellyfinsync/actions/runs/45243716752) built and pushed Docker Hub `latest` and `sha-2124859cb3bbe2efb14efb6d4676b1d4b63d08d4` at digest `sha256:5b0cffc8c7828b26a981b84641f453ebe0a2157e25d6574d58a55c908e769c6f`.
+- Previous image rollback tag: `sha-18e96b707a02f5b62d7f2d00607699825607e2fa`.
+
 ## 2026-11-23 — Restyle Web UI with Plex EPG theme
 
 [Source commit `28b1910`](https://github.com/lamb0985/plexkodijellyfinsync/commit/28b191084579f077131002838fd8e8ca68d5e599) · [Tracker path correction `18e96b7`](https://github.com/lamb0985/plexkodijellyfinsync/commit/18e96b707a02f5b62d7f2d00607699825607e2fa)
