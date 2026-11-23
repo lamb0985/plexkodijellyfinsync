@@ -211,6 +211,21 @@ def is_nonplayable_container(entry):
         for platform in ("plex", "kodi", "jellyfin")
     )
 
+# A movie with zero resume and an unwatched state on all platforms has no
+# progress left to synchronize. Keep episodes here: zero-time On Deck entries
+# still matter, and mixed statuses must be reconciled before removal.
+def is_cleared_movie(entry):
+    platforms = [entry.get(name) or {} for name in ("plex", "kodi", "jellyfin")]
+    return (
+        any(platform.get("media_type") == "movie" for platform in platforms)
+        and not any(platform.get("media_type") == "episode" for platform in platforms)
+        and all(
+            platform.get("status") == "unwatched"
+            and int(platform.get("resume", 0) or 0) == 0
+            for platform in platforms
+        )
+    )
+
 # Load sync state from the last known state file (for delta syncing)
 def load_sync_state():
     if os.path.exists(SYNC_STATE_FILE):
@@ -218,7 +233,7 @@ def load_sync_state():
             with open(SYNC_STATE_FILE, "r", encoding="utf-8") as f:
                 state = json.load(f)
                 return {path: entry for path, entry in state.items()
-                        if not is_nonplayable_container(entry)}
+                        if not is_nonplayable_container(entry) and not is_cleared_movie(entry)}
         except Exception:
             console.print("[red]No last sync state file detected. Assuming first run...[/]")
     return {}
@@ -228,7 +243,7 @@ def save_sync_state(state):
     try:
         with open(SYNC_STATE_FILE, "w", encoding="utf-8") as f:
             json.dump({path: entry for path, entry in state.items()
-                       if not is_nonplayable_container(entry)}, f, indent=2)
+                       if not is_nonplayable_container(entry) and not is_cleared_movie(entry)}, f, indent=2)
     except Exception:
         console.print("[red]Failed to save sync state[/]")
 
@@ -1746,7 +1761,8 @@ def print_sync_comparison(plex_items, kodi_items, jellyfin_items):
     console.print("[bold white]🔄 Sync Comparison[/]", justify="center")
     console.print()
     for label, table in (("Movies", movie_table), ("Shows", show_table), ("On Deck", on_deck_table)):
-        console.print(f"  [bold white]{label}[/]")
+        icon = {"Movies": "🎬", "Shows": "📺", "On Deck": "🌱"}[label]
+        console.print(f"  [bold white]{icon} {label}[/]")
         console.print(table)
         console.print()
 
@@ -1834,7 +1850,8 @@ def print_sync_results(plex_items, kodi_items, jellyfin_items, actions):
     console.print("[bold white]✅ Sync Results[/]", justify="center")
     console.print()
     for label, table in (("Movies", movie_table), ("Shows", show_table), ("On Deck", on_deck_table)):
-        console.print(f"  [bold white]{label}[/]")
+        icon = {"Movies": "🎬", "Shows": "📺", "On Deck": "🌱"}[label]
+        console.print(f"  [bold white]{icon} {label}[/]")
         console.print(table)
         console.print()
 
@@ -2224,7 +2241,13 @@ def main():
                 )
             )
         }
-        for rel_path in completed_paths:
+            # Also remove resolved zero-time movies from the refreshed results.
+        # They may have been fetched solely because they appeared in old state.
+        cleared_movie_paths = {
+            rel_path for rel_path, entry in final_sync_state.items()
+            if is_cleared_movie(entry)
+        }
+        for rel_path in completed_paths | cleared_movie_paths:
             final_sync_state.pop(rel_path, None)
             final_plex_items.pop(rel_path, None)
             final_kodi_items.pop(rel_path, None)
