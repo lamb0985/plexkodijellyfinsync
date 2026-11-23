@@ -1556,8 +1556,8 @@ def print_paths(plex_items, kodi_items, jellyfin_items):
 
         return table
 
-    def make_on_deck_table_shows(title, plex_items, kodi_items, jellyfin_items):
-        table = Table(box=box.SIMPLE_HEAD, title=title, title_style="bold green", show_header=False, expand=True)
+    def make_on_deck_table_shows(plex_items, kodi_items, jellyfin_items):
+        table = Table(box=None, show_header=False, expand=True, pad_edge=False)
         add_aligned_platform_columns(table, "Show", "bold green")
 
         add_platform_label_row(table)  # 👈 added
@@ -1605,12 +1605,14 @@ def print_paths(plex_items, kodi_items, jellyfin_items):
             status_label = "Watching"
 
         table = Table(
-            box=box.SIMPLE_HEAD,
+            box=None,
             title=f"▶ {platform_name.capitalize()} {status_label}",
             title_style=f"bold {color}",
+            title_justify="left",
             show_header=False,
             header_style="bold",
             expand=True,
+            pad_edge=False,
         )
 
         table.add_column("Title", style=f"bold {color}", width=max(18, min(30, console.width // 3)))
@@ -1645,7 +1647,7 @@ def print_paths(plex_items, kodi_items, jellyfin_items):
         return table
 
     def make_empty_progress_table(label):
-        table = Table(box=box.SIMPLE_HEAD, show_header=False, expand=True)
+        table = Table(box=None, show_header=False, expand=True, pad_edge=False)
         add_aligned_platform_columns(table, "Title")
         add_platform_label_row(table)
         table.add_row(f"No In Progress {label}", "", "", "", "")
@@ -1659,7 +1661,7 @@ def print_paths(plex_items, kodi_items, jellyfin_items):
     kodi_continue_shows_table = make_continue_watching_table_platform("Kodi", kodi_shows, "show", "cyan")
     jelly_continue_shows_table = make_continue_watching_table_platform("Jellyfin", jelly_shows, "show", "blue")
 
-    on_deck_shows_table = make_on_deck_table_shows("🌱 On Deck | Next Up", plex_shows, kodi_shows, jelly_shows)
+    on_deck_shows_table = make_on_deck_table_shows(plex_shows, kodi_shows, jelly_shows)
 
     console.rule("")
     console.print()
@@ -1668,12 +1670,13 @@ def print_paths(plex_items, kodi_items, jellyfin_items):
         ("Movies", (plex_continue_movies_table, kodi_continue_movies_table, jelly_continue_movies_table)),
         ("Shows", (plex_continue_shows_table, kodi_continue_shows_table, jelly_continue_shows_table)),
     ):
-        console.print(f"[bold white]{'🎬' if label == 'Movies' else '📺'} {label}[/]", justify="center")
+        console.print(f"[bold white]{'🎬' if label == 'Movies' else '📺'} {label}[/]")
         filled = [table for table in tables if table.row_count > 0]
         for table in filled or [make_empty_progress_table(label)]:
             console.print(table)
             console.print()
 
+    console.print("[bold green]🌱 On Deck | Next Up[/]")
     console.print(on_deck_shows_table)
     console.print()
 
@@ -1696,7 +1699,7 @@ def print_sync_comparison(plex_items, kodi_items, jellyfin_items):
     }
 
     def make_sync_table(items_plex, items_kodi, items_jelly, media_type, on_deck=False):
-        tbl = Table(box=box.SIMPLE_HEAD, show_header=False, expand=True)
+        tbl = Table(box=None, show_header=False, expand=True, pad_edge=False)
         col_name = "Movie" if media_type == "movie" else "Show"
         add_aligned_platform_columns(tbl, col_name)
 
@@ -1760,9 +1763,9 @@ def print_sync_comparison(plex_items, kodi_items, jellyfin_items):
 
     console.print("[bold white]🔄 Sync Comparison[/]", justify="center")
     console.print()
-    for label, table in (("Movies", movie_table), ("Shows", show_table), ("On Deck", on_deck_table)):
-        icon = {"Movies": "🎬", "Shows": "📺", "On Deck": "🌱"}[label]
-        console.print(f"  [bold white]{icon} {label}[/]")
+    for label, table in (("Movies", movie_table), ("Shows", show_table), ("On Deck | Next Up", on_deck_table)):
+        icon = {"Movies": "🎬", "Shows": "📺", "On Deck | Next Up": "🌱"}[label]
+        console.print(f"[bold white]{icon} {label}[/]")
         console.print(table)
         console.print()
 
@@ -1785,7 +1788,7 @@ def print_sync_results(plex_items, kodi_items, jellyfin_items, actions):
     }
 
     def make_sync_table(items_plex, items_kodi, items_jelly, media_type, on_deck=False):
-        tbl = Table(box=box.SIMPLE_HEAD, show_header=False, expand=True)
+        tbl = Table(box=None, show_header=False, expand=True, pad_edge=False)
         col_name = "Movie" if media_type == "movie" else "Show"
         add_aligned_platform_columns(tbl, col_name)
 
@@ -1849,9 +1852,9 @@ def print_sync_results(plex_items, kodi_items, jellyfin_items, actions):
 
     console.print("[bold white]✅ Sync Results[/]", justify="center")
     console.print()
-    for label, table in (("Movies", movie_table), ("Shows", show_table), ("On Deck", on_deck_table)):
-        icon = {"Movies": "🎬", "Shows": "📺", "On Deck": "🌱"}[label]
-        console.print(f"  [bold white]{icon} {label}[/]")
+    for label, table in (("Movies", movie_table), ("Shows", show_table), ("On Deck | Next Up", on_deck_table)):
+        icon = {"Movies": "🎬", "Shows": "📺", "On Deck | Next Up": "🌱"}[label]
+        console.print(f"[bold white]{icon} {label}[/]")
         console.print(table)
         console.print()
 
