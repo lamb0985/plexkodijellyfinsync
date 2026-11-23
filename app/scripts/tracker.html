@@ -8,186 +8,31 @@
     <link rel="stylesheet" href="https://googleapis.com">
     <link rel="stylesheet" href="https://cloudflare.com">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-    <style>
-        /* Force full screen viewport layout and remove white canvas defaults */
-        html, body {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100%;
-            background-color: #0d0e15;
-            font-family: 'Inter', sans-serif;
-            color: #f8f8f2;
-            overflow: hidden; /* Manage scrolling inside the tracker panel instead */
-        }
-
-        /* Responsive Dashboard Container - Scales exactly with your browser window size */
-        .fullscreen-panel {
-            width: 100%;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            background-color: #141622;
-            box-sizing: border-box;
-            padding: 24px;
-        }
-
-        /* Header Navigation Grid */
-        .panel-title {
-            position: relative;
-            font-size: 1.25rem;
-            font-weight: 600;
-            margin-bottom: 20px;
-            color: #50FA7B;
-            text-align: center;
-            border-bottom: 1px solid #2e3450;
-            padding-bottom: 16px;
-            flex-shrink: 0;
-        }
-
-        .panel-title span {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        /* Fully Responsive Content Feed Scroll Area */
-        .media-status-list {
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-            overflow-y: auto;
-            padding-right: 8px;
-            box-sizing: border-box;
-        }
-
-        /* Dynamic Container Rows */
-        .media-row { 
-            background-color: #1e2235; 
-            border: 1px solid #2e3450; 
-            border-radius: 12px; 
-            padding: 20px; 
-            display: flex; 
-            flex-direction: column; 
-            gap: 14px; 
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15); 
-        }
-
-        .section-header {
-            margin: 12px 0 8px;
-            padding: 12px 16px;
-            background: #1a1d2b;
-            border: 1px solid #2e3450;
-            border-left: 5px solid #50FA7B;
-            border-radius: 10px;
-            font-size: 1rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: .08em;
-            color: #f8f8f2;
-        }
-
-        .section-header.inprogress {
-            border-left-color: #ffb86c;
-        }
-
-        .section-header.upnext {
-            border-left-color: #50FA7B;
-        }
-
-        .media-title-area { 
-            font-weight: 600; 
-            font-size: 1.05rem; 
-            color: #ffffff; 
-            display: flex; 
-            align-items: start; 
-            gap: 12px; 
-            line-height: 1.4; 
-        }
-        
-        .media-title-area i { margin-top: 3px; }
-        
-        .file-path-subtext { 
-            display: block; 
-            font-size: 0.8rem; 
-            color: #6272a4; 
-            font-family: 'JetBrains Mono', monospace; 
-            word-break: break-all; 
-            margin-top: 4px; 
-            font-weight: 400; 
-        }
-
-        /* Grid adapts flexibly based on user panel horizontal space widths */
-        .platform-grid { 
-            display: grid; 
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); 
-            gap: 12px; 
-        }
-
-        .platform-badge { 
-            padding: 16px; 
-            border-radius: 8px; 
-            background-color: rgba(0,0,0,0.2); 
-            border: 1px solid rgba(255,255,255,0.04); 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
-            gap: 8px; 
-            font-size: 0.85rem; 
-            font-weight: 500; 
-            text-align: center; 
-        }
-        
-        /* Branding Color Flags */
-        .badge-plex { border-top: 3px solid #e5a93b; } .badge-plex i { color: #e5a93b !important; }
-        .badge-kodi { border-top: 3px solid #1cbdff; } .badge-kodi i { color: #1cbdff !important; }
-        .badge-jellyfin { border-top: 3px solid #a855f7; } .badge-jellyfin i { color: #a855f7 !important; }
-        
-        /* Progress Bar Pipeline layouts */
-        .progress-wrapper { width: 100%; background: #282a36; border-radius: 4px; height: 6px; overflow: hidden; margin-top: 4px; position: relative; }
-        .progress-bar { height: 100%; border-radius: 4px; transition: width 0.3s ease; }
-        .bar-plex { background-color: #e5a93b; } 
-        .bar-kodi { background-color: #1cbdff; } 
-        .bar-jellyfin { background-color: #a855f7; } 
-        
-        .badge-value { font-size: 1rem; font-weight: 600; color: #f8f8f2; }
-        .timestamp-val { font-family: 'JetBrains Mono', monospace; color: #6272a4; font-size: 0.75rem; }
-        .status-tag { font-size: 0.75rem; padding: 4px 8px; border-radius: 4px; font-weight: bold; text-transform: uppercase; }
-
-        .btn-refresh {
-            position: absolute;
-            right: 0;
-            top: 50%;
-            transform: translateY(-50%);
-            padding: 8px 16px;
-            font-size: 0.9rem;
-            background: rgba(255,255,255,0.05);
-            border: 1px solid #2e3450;
-            color: #f8f8f2;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            font-weight: 500;
-        }
-        .btn-refresh:hover { background: rgba(255,255,255,0.1); border-color: #949eb4; }
-
-        /* Custom Scrollbar Configuration */
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: #2e3450; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #6272a4; }
-    </style>
+    <style>:root{color-scheme:dark;--bg:#282a36;--panel:#21222c;--border:#44475a;--text:#f8f8f2;--muted:#b2b7cf;--purple:#bd93f9;--cyan:#8be9fd;--good:#50fa7b;--warn:#ffb86c}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:var(--bg);color:var(--text);font:16px/1.5 system-ui,-apple-system,Segoe UI,sans-serif}
+body{background:radial-gradient(circle at top right,rgba(189,147,249,.12),transparent 28%),linear-gradient(180deg,#252733,var(--bg) 170px)}
+.fullscreen-panel{max-width:1600px;margin:auto;padding:24px clamp(18px,4vw,56px) 50px}
+.panel-title{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;padding:8px 0 22px}
+.brand{display:flex;align-items:center;gap:14px}.logo-frame{width:58px;height:58px;display:grid;place-items:center;border:1px solid rgba(189,147,249,.34);border-radius:15px;background:linear-gradient(145deg,#393c50,#222432);box-shadow:0 8px 22px rgba(0,0,0,.24)}.logo-frame img{width:44px;height:44px}
+.eyebrow{color:var(--cyan);font-size:12px;font-weight:800;letter-spacing:.15em;text-transform:uppercase}h1{font-size:27px;line-height:1.2;margin:3px 0 0}
+.btn-refresh{padding:10px 14px;border-radius:10px;border:1px solid rgba(98,114,164,.45);background:linear-gradient(#36384a,#2a2d3c);color:var(--text);text-decoration:none;font:700 14px system-ui;cursor:pointer}
+.media-status-list{display:flex;flex-direction:column;gap:14px}.section-header{margin:12px 0 0;padding:0 2px;color:var(--cyan);text-transform:uppercase;letter-spacing:.1em;font-size:13px;font-weight:800}
+.section-header.inprogress{color:var(--warn)}.section-header.upnext{color:var(--good)}
+.media-row{border:1px solid rgba(98,114,164,.28);border-radius:14px;padding:18px;background:linear-gradient(180deg,rgba(52,55,70,.3),rgba(33,34,44,.98));box-shadow:0 12px 28px rgba(0,0,0,.18)}
+.media-title-area{display:flex;align-items:flex-start;gap:12px;font-size:17px;margin-bottom:5px}.media-title-area i{margin-top:4px}.file-path-subtext{display:block;color:var(--muted);font:13px/1.5 ui-monospace,Consolas,monospace;overflow-wrap:anywhere;margin-top:4px}
+.platform-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:17px}
+.platform-badge{border:1px solid rgba(98,114,164,.25);border-top:3px solid var(--platform);border-radius:9px;background:#1b1d28;padding:12px;min-width:0}
+.badge-plex{--platform:#e5a93b}.badge-kodi{--platform:#1cbdff}.badge-jellyfin{--platform:#a855f7}
+.platform-badge i{color:var(--platform)}.badge-value{display:block;margin-top:4px;font-size:16px;font-weight:700}.timestamp-val{color:var(--muted);font:13px ui-monospace,Consolas,monospace}
+.status-tag{display:inline-block;margin-top:8px;padding:4px 8px;border-radius:99px;font-size:12px}
+.progress-wrapper{height:6px;border-radius:10px;background:#343746;overflow:hidden;margin-top:9px}.progress-bar{height:100%;border-radius:10px;background:var(--platform)}
+@media(max-width:720px){.platform-grid{grid-template-columns:1fr}.fullscreen-panel{padding:16px}.panel-title{align-items:flex-start}h1{font-size:23px}}
+</style>
 </head>
 <body>
 
     <div class="fullscreen-panel">
-        <div class="panel-title">
-            <span><i class="fa-solid fa-film" style="color: #FF79C6;"></i> Plex Kodi Jellyfin Sync Tracker</span>
-            <button class="btn-refresh" onclick="window.location.href='/'">
-                <i class="fa-solid fa-arrow-left"></i> Back to Dashboard
-            </button>
-        </div>
+        <header class="panel-title"><div class="brand"><div class="logo-frame"><img src="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2232%22%20height%3D%2232%22%20viewBox%3D%220%200%2032%2032%22%20role%3D%22img%22%20aria-labelledby%3D%22title%22%3E%0A%20%20%3Ctitle%20id%3D%22title%22%3EPlex%20Kodi%20Jellyfin%20Sync%20icon%3C%2Ftitle%3E%0A%20%20%3Crect%20width%3D%2232%22%20height%3D%2232%22%20rx%3D%227%22%20fill%3D%22%23101827%22%2F%3E%0A%20%20%3Ccircle%20cx%3D%2216%22%20cy%3D%2216%22%20r%3D%2211.3%22%20fill%3D%22none%22%20stroke%3D%22%23253247%22%20stroke-width%3D%223%22%2F%3E%0A%20%20%3Cpath%20d%3D%22M16%204.7a11.3%2011.3%200%200%201%209.8%205.65%22%20fill%3D%22none%22%20stroke%3D%22%23e5a72d%22%20stroke-width%3D%223%22%20stroke-linecap%3D%22round%22%2F%3E%0A%20%20%3Cpath%20d%3D%22M25.8%2021.65A11.3%2011.3%200%200%201%206.2%2021.65%22%20fill%3D%22none%22%20stroke%3D%22%238e69de%22%20stroke-width%3D%223%22%20stroke-linecap%3D%22round%22%2F%3E%0A%20%20%3Cpath%20d%3D%22M6.2%2010.35A11.3%2011.3%200%200%201%2011.6%205.6%22%20fill%3D%22none%22%20stroke%3D%22%2331a5df%22%20stroke-width%3D%223%22%20stroke-linecap%3D%22round%22%2F%3E%0A%20%20%3Cpath%20d%3D%22M13%2010.7%2021.5%2016%2013%2021.3Z%22%20fill%3D%22%23f5f8ff%22%2F%3E%0A%3C%2Fsvg%3E%0A" width="44" height="44" alt="Plex Kodi Jellyfin Sync logo"></div><div><div class="eyebrow">Plex · Kodi · Jellyfin</div><h1>Sync Tracker</h1></div></div><a class="btn-refresh" href="/">Dashboard</a></header>
         
         <div class="media-status-list" id="statusViewContainer">
             <div style="color: #949eb4; text-align: center; padding: 100px 0; font-size: 1rem;">
