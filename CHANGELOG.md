@@ -2,6 +2,21 @@
 
 Changes are listed here with links to the corresponding GitHub commits. This file starts with the restored single-script release; earlier history is available in [GitHub's commit history](https://github.com/lamb0985/plexkodijellyfinsync/commits/main).
 
+## 2026-11-23 — Move Status into the page navigation
+
+[Source commit `9e5e583`](https://github.com/lamb0985/plexkodijellyfinsync/commit/9e5e583735d89d584b6ba1a24f32f0be5fa989ed) · [Previous source commit `081417c`](https://github.com/lamb0985/plexkodijellyfinsync/commit/081417c8cade0894c2fca259d05e29b1c6cfb2a5)
+
+### Changed
+
+- Dashboard, Tracker, Environment, and Status now appear together in the same navigation bar on every page. The header retains Sync now and Reset. Removed the dashboard's inline status panel and Tracker/Environment status dialogs.
+- Added `GET /status-page` for a dedicated status page with the shared header, a Copy control, and automatic five-second refresh. The existing `GET /status` JSON endpoint and its response format remain unchanged.
+
+### Verification and rollback
+
+- Checked all four pages' navigation and header controls, dashboard log/command elements, status data fetch, and Environment form fields. Python compilation and inline JavaScript syntax checks passed. No live Organizr or three-server sync test was run.
+- [GitHub Actions run 45247233193](https://github.com/lamb0985/plexkodijellyfinsync/actions/runs/45247233193) built and pushed Docker Hub `latest` and `sha-9e5e583735d89d584b6ba1a24f32f0be5fa989ed` at digest `sha256:6642899eac0baf08b995e958c76581c5bf06e9411a447c5a0aa7877f570c000c`.
+- Previous image rollback tag: `sha-6fb57caf934c0e59db319b0babe0d369cb473795`.
+
 ## 2026-11-23 — Unify page navigation and simplify Dashboard
 
 [Source commit `6fb57ca`](https://github.com/lamb0985/plexkodijellyfinsync/commit/6fb57caf934c0e59db319b0babe0d369cb473795) · [Previous source commit `9703d40`](https://github.com/lamb0985/plexkodijellyfinsync/commit/9703d40edf9b8d11fbcc43a5d2e5ed929e7ad97a)
