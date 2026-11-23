@@ -242,14 +242,36 @@ html,body{margin:0;min-height:100%;background:#282a36}
  socket.on("connect", reportLogWidth);
  if (window.ResizeObserver) new ResizeObserver(reportLogWidth).observe(termBox);
  else window.addEventListener("resize", reportLogWidth);
- socket.on("log_update", data => { appendLog(data); if (String(data).includes("Sync Completed")) fetchStatus(); });
+ async function refreshLog() {
+  const previousTop = termBox.scrollTop;
+  const nearBottom = termBox.scrollHeight - previousTop - termBox.clientHeight < 60;
+  try {
+   const response = await fetch("/api/logs", { cache: "no-store", credentials: "include" });
+   if (!response.ok) throw new Error("HTTP " + response.status);
+   const snapshot = await response.text();
+   if (!snapshot) { termBox.textContent = "No log output yet."; logStarted = false; return; }
+   if (snapshot === lastSnapshot) return;
+   lastSnapshot = snapshot;
+   termBox.textContent = "";
+   ansiStyle = {};
+   logStarted = true;
+   appendLog(snapshot);
+   if (!nearBottom) termBox.scrollTop = previousTop;
+   fetchStatus();
+  } catch (error) {
+   if (!logStarted) termBox.textContent = "Unable to load logs: " + error.message;
+  }
+ }
+ let lastSnapshot = "";
+ refreshLog();
+ setInterval(refreshLog, 5000);
  document.getElementById("cmdinput").addEventListener("keypress", e => {
  if (e.key === "Enter") {
  socket.emit("run_cmd", e.target.value);
  e.target.value = "";
  }
  });
- socket.on("cmd_output", appendLog);
+ socket.on("cmd_output", () => { setTimeout(refreshLog, 250); });
  function updateSummary(data) {
  const entries = Object.values(data.data || {});
  const kinds = {movies:0,shows:0,onDeck:0};

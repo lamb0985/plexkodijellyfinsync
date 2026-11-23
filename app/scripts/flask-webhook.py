@@ -224,6 +224,23 @@ def reset_sync():
         console.print(f"[red]Reset failed:[/red] {e}")
         return jsonify({"error": str(e)}), 500
 
+@app.route("/api/logs", methods=["GET"])
+def recent_logs():
+    # Return a bounded tail so opening the dashboard immediately shows recent output.
+    try:
+        with open(LOG_FILE, "rb") as log:
+            log.seek(0, os.SEEK_END)
+            start = max(0, log.tell() - 262144)
+            log.seek(start)
+            if start:
+                log.readline()  # discard the partial first line
+            data = log.read().decode("utf-8", errors="replace")
+    except OSError:
+        data = ""
+    response = Response(data, mimetype="text/plain; charset=utf-8")
+    response.headers["Cache-Control"] = "no-store"
+    return response
+
 @app.route("/status", methods=["GET"])
 #@requires_auth
 def status():
