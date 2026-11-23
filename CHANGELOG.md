@@ -2,6 +2,20 @@
 
 Changes are listed here with links to the corresponding GitHub commits. This file starts with the restored single-script release; earlier history is available in [GitHub's commit history](https://github.com/lamb0985/plexkodijellyfinsync/commits/main).
 
+## 2026-11-23 — Display blank log rows in Dashboard
+
+[Source commit `ff9e051`](https://github.com/lamb0985/plexkodijellyfinsync/commit/ff9e05140b1795666e2e8c7c9451e7057e68f154)
+
+### Changed
+
+- Dashboard's ANSI renderer already created an empty `div` for each blank log line, but those elements collapsed to zero height. Empty log rows now occupy one line height, preserving category spacing in existing saved logs and future sync output. Log colors and horizontal scrolling are unchanged.
+
+### Verification and rollback
+
+- Checked that blank rows use the new line-height rule while the renderer still creates one row per source line. Dashboard inline JavaScript passed `node --check`. A live browser inside Organizr was not available for visual verification.
+- [GitHub Actions run 45255586271](https://github.com/lamb0985/plexkodijellyfinsync/actions/runs/45255586271) built and pushed Docker Hub `latest` and `sha-ff9e05140b1795666e2e8c7c9451e7057e68f154` at digest `sha256:8f7d45023a96820858d4335034b70c1e281eb7982d51157127d930438e6cb17e`.
+- Previous image rollback tag: `sha-b024d2a62f1a0006629c964c026120f2c4500928`.
+
 ## 2026-11-23 — Restore spacing between log categories
 
 [Source commit `b024d2a`](https://github.com/lamb0985/plexkodijellyfinsync/commit/b024d2a62f1a0006629c964c026120f2c4500928)
