@@ -4,18 +4,18 @@ Changes are listed here with links to the corresponding GitHub commits. This fil
 
 ## 2026-11-23 — Restyle Web UI with Plex EPG theme
 
-[Source commit `28b1910`](https://github.com/lamb0985/plexkodijellyfinsync/commit/28b191084579f077131002838fd8e8ca68d5e599)
+[Source commit `28b1910`](https://github.com/lamb0985/plexkodijellyfinsync/commit/28b191084579f077131002838fd8e8ca68d5e599) · [Tracker path correction `18e96b7`](https://github.com/lamb0985/plexkodijellyfinsync/commit/18e96b707a02f5b62d7f2d00607699825607e2fa)
 
 ### Changed
 
 - Restyled the dashboard, Tracker, and Environment pages using the Plex EPG Dracula palette, card layout, header treatment, and the existing Plex Kodi Jellyfin Sync logo. The logo is embedded in the pages; the source image assets were not altered.
 - Kept dashboard Sync, Reset, Status/Copy, live colored logs, measured log width, and command input; kept Tracker's existing status parsing and platform progress; kept the authenticated `/env` editor, CSRF fields, and file contents form.
-- Added dashboard summary counts derived from the existing `/status` response. No Flask routes, sync decisions, or API names changed.
+- Added dashboard summary counts derived from the existing `/status` response. The `/tracker` route now serves the bundled page before a host-mounted fallback, so old `/scripts/tracker.html` copies cannot hide the new design. Route URLs and methods, sync decisions, and API names remain the same.
 
 ### Verification and rollback
 
 - HTML IDs, navigation links, dashboard controls, Environment form fields, and embedded logo were checked; the inline dashboard and Tracker JavaScript passed `node --check`. A live browser and three-server sync were not run.
-- [GitHub Actions run 45242126642](https://github.com/lamb0985/plexkodijellyfinsync/actions/runs/45242126642) built and pushed Docker Hub `latest` and `sha-28b191084579f077131002838fd8e8ca68d5e599` at digest `sha256:524f64de98b1dcb7f1a1cea747b16db051df8047176efbca732e057155e820af`.
+- [Final GitHub Actions run 45242374856](https://github.com/lamb0985/plexkodijellyfinsync/actions/runs/45242374856) built and pushed Docker Hub `latest` and `sha-18e96b707a02f5b62d7f2d00607699825607e2fa` at digest `sha256:f319af32c92f8acaad635ff1886fdd2e53fffd1f983d21471c9bf24799754203`. The earlier UI-only build is retained as `sha-28b191084579f077131002838fd8e8ca68d5e599`.
 - Previous image rollback tag: `sha-2f18a8c1a53a8867597362f621aa5d2ee2ecf97c`.
 
 ## 2026-11-12 — Reuse refreshed Jellyfin token on subsequent syncs
