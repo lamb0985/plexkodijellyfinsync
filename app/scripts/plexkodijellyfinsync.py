@@ -1675,6 +1675,7 @@ def print_paths(plex_items, kodi_items, jellyfin_items):
         for table in filled or [make_empty_progress_table(label)]:
             console.print(table)
             console.print()
+        console.print()  # Space between media categories, not below the heading.
 
     console.print("[bold green]🌱 On Deck | Next Up[/]")
     console.print(on_deck_shows_table)
@@ -1768,6 +1769,8 @@ def print_sync_comparison(plex_items, kodi_items, jellyfin_items):
         console.print(f"[bold white]{icon} {label}[/]")
         console.print(table)
         console.print()
+        if label != "On Deck | Next Up":
+            console.print()  # Separate categories without separating title and table.
 
 
 def print_sync_results(plex_items, kodi_items, jellyfin_items, actions):
@@ -1857,6 +1860,8 @@ def print_sync_results(plex_items, kodi_items, jellyfin_items, actions):
         console.print(f"[bold white]{icon} {label}[/]")
         console.print(table)
         console.print()
+        if label != "On Deck | Next Up":
+            console.print()  # Separate categories without separating title and table.
 
 ###################################################
 ############# PREVIOUS PRINT TABLE FUNCTIONS ###############
