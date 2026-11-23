@@ -2,6 +2,20 @@
 
 Changes are listed here with links to the corresponding GitHub commits. This file starts with the restored single-script release; earlier history is available in [GitHub's commit history](https://github.com/lamb0985/plexkodijellyfinsync/commits/main).
 
+## 2026-11-23 — Restore spacing between log categories
+
+[Source commit `b024d2a`](https://github.com/lamb0985/plexkodijellyfinsync/commit/b024d2a62f1a0006629c964c026120f2c4500928)
+
+### Changed
+
+- Added one more blank line between Movies, Shows, and On Deck | Next Up in the initial platform report, Sync Comparison, and Sync Results. Each category title remains immediately above its table, and the compact full-width table layout remains in place.
+
+### Verification and rollback
+
+- Python compilation passed. Actual Rich reports rendered at 84 and 120 columns, confirming nine left-aligned section headings, no blank line below each heading, and two blank lines between categories. No live three-server sync was run.
+- [GitHub Actions run 45253981460](https://github.com/lamb0985/plexkodijellyfinsync/actions/runs/45253981460) built and pushed Docker Hub `latest` and `sha-b024d2a62f1a0006629c964c026120f2c4500928` at digest `sha256:a5c0f14d7cc021d43f5f74ec43faf4bf0e5623416e29de8f39bfabb2aa9492f3`.
+- Previous image rollback tag: `sha-3cfae5851406f8c222e3b9b5598650672270fe81`.
+
 ## 2026-11-23 — Align log sections and retain measured output width
 
 [Log layout commit `fc596b3`](https://github.com/lamb0985/plexkodijellyfinsync/commit/fc596b3f1888b3fc27116cfaa2fbaead39295d85) · [Cross-page width correction `3cfae58`](https://github.com/lamb0985/plexkodijellyfinsync/commit/3cfae5851406f8c222e3b9b5598650672270fe81)
