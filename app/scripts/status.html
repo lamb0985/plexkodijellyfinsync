@@ -59,11 +59,23 @@ async function fetchStatus() {
   output.textContent = JSON.stringify(data, null, 2);
  } catch (error) { output.textContent = 'Unable to load status: ' + error.message; }
 }
+function syncLogColumns() {
+ const content = document.querySelector('main') || document.querySelector('.fullscreen-panel');
+ const gutter = content ? parseFloat(getComputedStyle(content).paddingLeft) || 0 : 26;
+ const canvas = document.createElement('canvas');
+ const context = canvas.getContext('2d');
+ if (!context) return 80;
+ context.font = '13px ui-monospace, SFMono-Regular, Consolas, monospace';
+ const characterWidth = Math.max(1, context.measureText('M').width);
+ // Match Dashboard: main gutter, card padding, and log padding/borders.
+ const available = document.documentElement.clientWidth - gutter * 2 - 34 - 28 - 4;
+ return Math.max(60, Math.min(240, Math.floor(available / characterWidth) - 1));
+}
 async function runSyncAction(action) {
  const button = document.querySelector('.page-actions .' + (action === 'sync' ? 'primary' : 'danger'));
  button.disabled = true;
  try {
-  const response = await fetch('/' + action, {credentials:'include'});
+  const response = await fetch('/' + action + '?columns=' + syncLogColumns(), {credentials:'include'});
   if (!response.ok) throw new Error('HTTP ' + response.status);
   fetchStatus();
  } catch (error) { alert('Unable to ' + action + ': ' + error.message); }
