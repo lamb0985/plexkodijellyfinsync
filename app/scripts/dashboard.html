@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Plex Kodi Jellyfin Sync</title><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css"><script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script><style>
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Plex Kodi Jellyfin Sync</title><style>
     .pkjs-app {
       --bg:#282a36; --surface:#1f2130; --panel:#21222c; --panel2:#2b2d3a;
       --border:#44475a; --text:#f8f8f2; --muted:#b2b7cf; --purple:#bd93f9;
@@ -134,11 +134,11 @@ html,body{margin:0;min-height:100%;background:#282a36}
 @media(max-width:560px){.pkjs-app .overview{grid-template-columns:repeat(2,minmax(0,1fr))}}
 </style></head><body>
 <div class="pkjs-app">
-<header class="top"><div class="brand"><div class="logo-frame"><img src="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2232%22%20height%3D%2232%22%20viewBox%3D%220%200%2032%2032%22%20role%3D%22img%22%20aria-labelledby%3D%22title%22%3E%0A%20%20%3Ctitle%20id%3D%22title%22%3EPlex%20Kodi%20Jellyfin%20Sync%20icon%3C%2Ftitle%3E%0A%20%20%3Crect%20width%3D%2232%22%20height%3D%2232%22%20rx%3D%227%22%20fill%3D%22%23101827%22%2F%3E%0A%20%20%3Ccircle%20cx%3D%2216%22%20cy%3D%2216%22%20r%3D%2211.3%22%20fill%3D%22none%22%20stroke%3D%22%23253247%22%20stroke-width%3D%223%22%2F%3E%0A%20%20%3Cpath%20d%3D%22M16%204.7a11.3%2011.3%200%200%201%209.8%205.65%22%20fill%3D%22none%22%20stroke%3D%22%23e5a72d%22%20stroke-width%3D%223%22%20stroke-linecap%3D%22round%22%2F%3E%0A%20%20%3Cpath%20d%3D%22M25.8%2021.65A11.3%2011.3%200%200%201%206.2%2021.65%22%20fill%3D%22none%22%20stroke%3D%22%238e69de%22%20stroke-width%3D%223%22%20stroke-linecap%3D%22round%22%2F%3E%0A%20%20%3Cpath%20d%3D%22M6.2%2010.35A11.3%2011.3%200%200%201%2011.6%205.6%22%20fill%3D%22none%22%20stroke%3D%22%2331a5df%22%20stroke-width%3D%223%22%20stroke-linecap%3D%22round%22%2F%3E%0A%20%20%3Cpath%20d%3D%22M13%2010.7%2021.5%2016%2013%2021.3Z%22%20fill%3D%22%23f5f8ff%22%2F%3E%0A%3C%2Fsvg%3E%0A" width="48" height="48" alt="Plex Kodi Jellyfin Sync logo"></div><div><div class="eyebrow">Plex · Kodi · Jellyfin</div><h1>Sync Dashboard</h1></div></div><div class="header-actions"><button class="button primary" onclick="syncNow()">Sync now</button><button class="button danger" onclick="resetSync()">Reset</button><button class="button subtle" onclick="toggleStatus()">Status</button></div></header>
-<nav class="nav" aria-label="Pages"><a class="active" href="/" aria-current="page">Dashboard</a><a href="/tracker">Tracker</a><a href="/env">Environment</a></nav>
+<header class="top"><div class="brand"><div class="logo-frame"><img src="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2232%22%20height%3D%2232%22%20viewBox%3D%220%200%2032%2032%22%20role%3D%22img%22%20aria-labelledby%3D%22title%22%3E%0A%20%20%3Ctitle%20id%3D%22title%22%3EPlex%20Kodi%20Jellyfin%20Sync%20icon%3C%2Ftitle%3E%0A%20%20%3Crect%20width%3D%2232%22%20height%3D%2232%22%20rx%3D%227%22%20fill%3D%22%23101827%22%2F%3E%0A%20%20%3Ccircle%20cx%3D%2216%22%20cy%3D%2216%22%20r%3D%2211.3%22%20fill%3D%22none%22%20stroke%3D%22%23253247%22%20stroke-width%3D%223%22%2F%3E%0A%20%20%3Cpath%20d%3D%22M16%204.7a11.3%2011.3%200%200%201%209.8%205.65%22%20fill%3D%22none%22%20stroke%3D%22%23e5a72d%22%20stroke-width%3D%223%22%20stroke-linecap%3D%22round%22%2F%3E%0A%20%20%3Cpath%20d%3D%22M25.8%2021.65A11.3%2011.3%200%200%201%206.2%2021.65%22%20fill%3D%22none%22%20stroke%3D%22%238e69de%22%20stroke-width%3D%223%22%20stroke-linecap%3D%22round%22%2F%3E%0A%20%20%3Cpath%20d%3D%22M6.2%2010.35A11.3%2011.3%200%200%201%2011.6%205.6%22%20fill%3D%22none%22%20stroke%3D%22%2331a5df%22%20stroke-width%3D%223%22%20stroke-linecap%3D%22round%22%2F%3E%0A%20%20%3Cpath%20d%3D%22M13%2010.7%2021.5%2016%2013%2021.3Z%22%20fill%3D%22%23f5f8ff%22%2F%3E%0A%3C%2Fsvg%3E%0A" width="48" height="48" alt="Plex Kodi Jellyfin Sync logo"></div><div><div class="eyebrow">Plex · Kodi · Jellyfin</div><h1>Sync Dashboard</h1></div></div><div class="header-actions"><button class="button primary" onclick="syncNow()">Sync now</button><button class="button danger" onclick="resetSync()">Reset</button></div></header>
+<nav class="nav" aria-label="Pages"><a class="active" href="/" aria-current="page">Dashboard</a><a href="/tracker">Tracker</a><a href="/env">Environment</a><a href="/status-page">Status</a></nav>
 <main>
 <section class="card"><div class="section-head"><div><h2>Activity</h2><p>Recent sync output from Plex, Kodi, and Jellyfin.</p></div><span class="badge">Live log</span></div><div class="log-head"><span class="label">Live Logs</span><button class="text-button" type="button" onclick="document.getElementById('terminal').scrollTop=document.getElementById('terminal').scrollHeight">Jump to latest</button></div><div id="terminal" class="log" role="log" aria-live="off">Connecting to logs…</div><label for="cmdinput" class="label" style="display:block;margin-top:14px">Command</label><input id="cmdinput" class="terminal-input" placeholder="Type command and press Enter" autocomplete="off"></section>
-<section id="statusBoxWrapper" class="card status-panel"><div class="section-head"><h2>Sync Status</h2><button class="button" id="copyBtn" onclick="copyStatus()">Copy</button></div><pre><code id="statusBox" class="json">No status yet.</code></pre></section></main></div>
+</main></div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.min.js"></script>
  <script>
  const termBox = document.getElementById("terminal");
@@ -258,7 +258,6 @@ html,body{margin:0;min-height:100%;background:#282a36}
    logStarted = true;
    appendLog(snapshot);
    if (!nearBottom) termBox.scrollTop = previousTop;
-   fetchStatus();
   } catch (error) {
    if (!logStarted) termBox.textContent = "Unable to load logs: " + error.message;
   }
@@ -273,26 +272,8 @@ html,body{margin:0;min-height:100%;background:#282a36}
  }
  });
  socket.on("cmd_output", () => { setTimeout(refreshLog, 250); });
- function fetchStatus() {
- fetch('/status', { credentials: 'include' })
- .then(r => r.json())
- .then(data => {
- document.getElementById("statusBox").textContent = JSON.stringify(data, null, 2);
- hljs.highlightElement(document.getElementById("statusBox"));
- });
- }
- function syncNow() { fetch('/sync?columns=' + logColumns(), { credentials: 'include' }).then(fetchStatus); }
- function resetSync() { fetch('/reset?columns=' + logColumns(), { credentials: 'include' }).then(fetchStatus); }
- function toggleStatus() {
- const w = document.getElementById("statusBoxWrapper");
- if (!w.classList.contains("open")) {
- w.classList.add("open");
- fetchStatus();
- } else w.classList.remove("open");
- }
- function tracker() { window.location.href = "/tracker"; }
- function copyStatus() { navigator.clipboard.writeText(document.getElementById("statusBox").textContent); }
- fetchStatus();
+ function syncNow() { fetch('/sync?columns=' + logColumns(), { credentials: 'include' }).then(() => setTimeout(refreshLog, 250)); }
+ function resetSync() { fetch('/reset?columns=' + logColumns(), { credentials: 'include' }).then(() => setTimeout(refreshLog, 250)); }
  </script>
  </body>
 </html>

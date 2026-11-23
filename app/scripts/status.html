@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Status | Plex Kodi Jellyfin Sync</title>
+<style>:root{color-scheme:dark;--bg:#282a36;--text:#f8f8f2;--muted:#b2b7cf;--cyan:#8be9fd;--purple:#bd93f9;--good:#50fa7b;--bad:#ff5555}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:var(--bg);color:var(--text);font:16px/1.5 system-ui,-apple-system,Segoe UI,sans-serif}
+body{background:radial-gradient(circle at top right,rgba(189,147,249,.12),transparent 28%),linear-gradient(180deg,#252733,var(--bg) 170px)}
+main{width:100%;min-width:0;margin:0;padding:23px 26px 50px}
+.top{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:24px}
+.brand{display:flex;align-items:center;gap:14px}.logo-frame{width:58px;height:58px;display:grid;place-items:center;border:1px solid rgba(189,147,249,.34);border-radius:15px;background:linear-gradient(145deg,#393c50,#222432);box-shadow:0 8px 22px rgba(0,0,0,.24)}.logo-frame img{width:44px;height:44px}
+.eyebrow{color:var(--cyan);font-size:12px;font-weight:800;letter-spacing:.15em;text-transform:uppercase}h1{font-size:27px;line-height:1.2;margin:3px 0 0}
+.back,button{padding:10px 14px;border-radius:10px;border:1px solid rgba(98,114,164,.45);background:linear-gradient(#36384a,#2a2d3c);color:var(--text);font:700 14px system-ui;text-decoration:none;cursor:pointer}
+button.primary{background:linear-gradient(#c49dff,#a57bf6);border-color:#c49dff;color:#171720}
+.note,.message,.error{padding:13px 16px;border-radius:9px;margin:16px 0}.note{background:rgba(255,184,108,.08);border-left:3px solid #ffb86c}.message{background:rgba(80,250,123,.1);color:var(--good)}.error{background:rgba(255,85,85,.1);color:#ffb6b6}
+.card{background:linear-gradient(180deg,rgba(52,55,70,.3),rgba(33,34,44,.98));border:1px solid rgba(98,114,164,.28);border-radius:14px;padding:20px;box-shadow:0 12px 28px rgba(0,0,0,.18)}
+label{display:block;color:var(--muted);font-size:13px;font-weight:750;text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px}
+textarea{display:block;width:100%;min-height:60vh;padding:16px;color:var(--text);background:#1b1d28;border:1px solid rgba(98,114,164,.42);border-radius:9px;font:14px/1.5 ui-monospace,SFMono-Regular,Consolas,monospace;white-space:pre;resize:vertical}
+textarea:focus{outline:none;border-color:var(--purple);box-shadow:0 0 0 3px rgba(189,147,249,.16)}
+form button{margin-top:16px}
+@media(max-width:600px){main{padding:16px}.top{align-items:flex-start}h1{font-size:23px}}
+
+/* Shared dashboard chrome and iframe-safe content sizing. */
+html,body{width:100%;min-width:0}
+.page-top{display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap;padding:19px 26px;border-bottom:1px solid #44475a;background:rgba(33,34,44,.94)}
+.page-top .brand{min-width:0}
+.page-actions,.page-nav{display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.page-actions button,.status-dialog button{padding:9px 13px;border:1px solid rgba(98,114,164,.5);border-radius:10px;background:linear-gradient(#36384a,#2a2d3c);color:var(--text);font:700 14px system-ui;cursor:pointer}
+.page-actions button{margin:0;min-height:40px}
+.page-actions button.primary{background:linear-gradient(#c49dff,#a57bf6);border-color:#c49dff;color:#171720}
+.page-actions .danger{color:#ffb6b6}
+.page-actions .subtle{background:transparent}
+.page-nav{padding:11px 26px;gap:6px;border-bottom:1px solid rgba(98,114,164,.3);background:rgba(31,33,48,.68)}
+.page-nav a{display:inline-block;border-radius:8px;padding:8px 13px;color:var(--muted);text-decoration:none;font-size:14px;font-weight:700}
+.page-nav a:hover,.page-nav a[aria-current="page"]{background:#3a3b52;color:var(--text)}
+.page-nav a[aria-current="page"]{box-shadow:inset 0 -2px 0 var(--purple)}
+.status-dialog{width:min(720px,calc(100vw - 32px));max-height:80vh;overflow:auto;border:1px solid #6272a4;border-radius:14px;background:#21222c;color:var(--text);padding:20px}
+.status-dialog::backdrop{background:rgba(0,0,0,.65)}
+.status-dialog pre{max-width:100%;overflow:auto;padding:14px;border-radius:9px;background:#181922;font:13px/1.5 ui-monospace,Consolas,monospace}
+.status-dialog .dialog-actions{display:flex;justify-content:flex-end;gap:8px}
+@media(max-width:560px){.page-top,.page-nav{padding-left:16px;padding-right:16px}.page-top h1{font-size:23px}}
+
+.status-card{background:linear-gradient(180deg,rgba(52,55,70,.3),rgba(33,34,44,.98));border:1px solid rgba(98,114,164,.28);border-radius:14px;padding:20px;min-width:0}
+.status-head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.status-head h2{margin:0;font-size:19px}
+.status-card pre{margin:16px 0 0;max-width:100%;max-height:calc(100vh - 310px);min-height:300px;overflow:auto;white-space:pre;padding:14px;background:#181922;border:1px solid rgba(98,114,164,.3);border-radius:10px;color:var(--text);font:13px/1.5 ui-monospace,SFMono-Regular,Consolas,monospace}
+.status-card button{margin:0}
+.status-card p{color:var(--muted);margin:8px 0 0}
+</style>
+</head>
+<body>
+<header class="page-top"><div class="brand"><div class="logo-frame"><img src="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2232%22%20height%3D%2232%22%20viewBox%3D%220%200%2032%2032%22%20role%3D%22img%22%20aria-labelledby%3D%22title%22%3E%0A%20%20%3Ctitle%20id%3D%22title%22%3EPlex%20Kodi%20Jellyfin%20Sync%20icon%3C%2Ftitle%3E%0A%20%20%3Crect%20width%3D%2232%22%20height%3D%2232%22%20rx%3D%227%22%20fill%3D%22%23101827%22%2F%3E%0A%20%20%3Ccircle%20cx%3D%2216%22%20cy%3D%2216%22%20r%3D%2211.3%22%20fill%3D%22none%22%20stroke%3D%22%23253247%22%20stroke-width%3D%223%22%2F%3E%0A%20%20%3Cpath%20d%3D%22M16%204.7a11.3%2011.3%200%200%201%209.8%205.65%22%20fill%3D%22none%22%20stroke%3D%22%23e5a72d%22%20stroke-width%3D%223%22%20stroke-linecap%3D%22round%22%2F%3E%0A%20%20%3Cpath%20d%3D%22M25.8%2021.65A11.3%2011.3%200%200%201%206.2%2021.65%22%20fill%3D%22none%22%20stroke%3D%22%238e69de%22%20stroke-width%3D%223%22%20stroke-linecap%3D%22round%22%2F%3E%0A%20%20%3Cpath%20d%3D%22M6.2%2010.35A11.3%2011.3%200%200%201%2011.6%205.6%22%20fill%3D%22none%22%20stroke%3D%22%2331a5df%22%20stroke-width%3D%223%22%20stroke-linecap%3D%22round%22%2F%3E%0A%20%20%3Cpath%20d%3D%22M13%2010.7%2021.5%2016%2013%2021.3Z%22%20fill%3D%22%23f5f8ff%22%2F%3E%0A%3C%2Fsvg%3E%0A" width="44" height="44" alt="Plex Kodi Jellyfin Sync logo"></div><div><div class="eyebrow">Plex · Kodi · Jellyfin</div><h1>Sync Status</h1></div></div><div class="page-actions"><button type="button" class="primary" onclick="runSyncAction('sync')">Sync now</button><button type="button" class="danger" onclick="runSyncAction('reset')">Reset</button></div></header>
+<nav class="page-nav" aria-label="Pages"><a href="/">Dashboard</a><a href="/tracker">Tracker</a><a href="/env">Environment</a><a href="/status-page" aria-current="page">Status</a></nav>
+<main><section class="status-card"><div class="status-head"><h2>Saved sync status</h2><button type="button" onclick="copyStatus()">Copy</button></div><p>Current saved state across Plex, Kodi, and Jellyfin.</p><pre id="statusText" role="status">Loading status…</pre></section></main>
+<script>
+async function fetchStatus() {
+ const output = document.getElementById('statusText');
+ try {
+  const response = await fetch('/status', {cache:'no-store', credentials:'include'});
+  const data = await response.json();
+  output.textContent = JSON.stringify(data, null, 2);
+ } catch (error) { output.textContent = 'Unable to load status: ' + error.message; }
+}
+async function runSyncAction(action) {
+ const button = document.querySelector('.page-actions .' + (action === 'sync' ? 'primary' : 'danger'));
+ button.disabled = true;
+ try {
+  const response = await fetch('/' + action, {credentials:'include'});
+  if (!response.ok) throw new Error('HTTP ' + response.status);
+  fetchStatus();
+ } catch (error) { alert('Unable to ' + action + ': ' + error.message); }
+ finally { button.disabled = false; }
+}
+function copyStatus() { navigator.clipboard.writeText(document.getElementById('statusText').textContent); }
+fetchStatus();
+setInterval(fetchStatus, 5000);
+</script>
+</body></html>

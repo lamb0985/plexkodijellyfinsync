@@ -189,6 +189,14 @@ def homepage():
     except Exception as e:
         return f"Error loading dashboard: {str(e)}", 500
 
+@app.route("/status-page", methods=["GET"])
+def status_page():
+    try:
+        page = Path(__file__).resolve().parent / "status.html"
+        return page.read_text(encoding="utf-8")
+    except FileNotFoundError:
+        return "Error: 'status.html' not found.", 404
+
 @app.route("/tracker", methods=["GET"])
 #@requires_auth
 def tracker_homepage():
