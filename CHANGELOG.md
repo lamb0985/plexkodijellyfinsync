@@ -2,6 +2,21 @@
 
 Changes are listed here with links to the corresponding GitHub commits. This file starts with the restored single-script release; earlier history is available in [GitHub's commit history](https://github.com/lamb0985/plexkodijellyfinsync/commits/main).
 
+## 2026-11-23 — Prune cleared movies and align log section icons
+
+[Source commit `1917871`](https://github.com/lamb0985/plexkodijellyfinsync/commit/191787115be92c38680647255cabe828e18b19e7) · [Previous source commit `e9890c1`](https://github.com/lamb0985/plexkodijellyfinsync/commit/e9890c1dce6e668a722998e77796ca33c7cd1a2e)
+
+### Changed
+
+- Fully unwatched movie entries with zero resume on Plex, Kodi, and Jellyfin are removed from saved sync state. Previously their saved IDs caused exact lookups on later runs and they could reappear as all-`-` rows in Sync Results, as reported for Alpha and Ant-Man. The refreshed results also omit these resolved movies after a run. Episodes on deck, in-progress items, mixed watched/unwatched status, and watched cleanup retain their existing behavior.
+- Sync Comparison and Sync Results now put `🎬`, `📺`, and `🌱` before Movies, Shows, and On Deck, matching the earlier log sections.
+
+### Verification and rollback
+
+- Python compilation passed. Isolated state load/save checks verified zero-resume unwatched movies are removed and on-deck episodes, in-progress, watched, and mixed states remain. Both report functions were checked for matching icon-before-title headings. The pasted log does not contain Alpha and Ant-Man's saved status fields, so this specific fixture reflects the resolved zero-resume unwatched condition; no live three-server sync was run.
+- [GitHub Actions run 45249280749](https://github.com/lamb0985/plexkodijellyfinsync/actions/runs/45249280749) built and pushed Docker Hub `latest` and `sha-191787115be92c38680647255cabe828e18b19e7` at digest `sha256:ea1b9dc8aadc70159baf5b543c3b41d1f6dd0dea89e00eebd7a7e3d9fa0da15b`.
+- Previous image rollback tag: `sha-9e5e583735d89d584b6ba1a24f32f0be5fa989ed`.
+
 ## 2026-11-23 — Move Status into the page navigation
 
 [Source commit `9e5e583`](https://github.com/lamb0985/plexkodijellyfinsync/commit/9e5e583735d89d584b6ba1a24f32f0be5fa989ed) · [Previous source commit `081417c`](https://github.com/lamb0985/plexkodijellyfinsync/commit/081417c8cade0894c2fca259d05e29b1c6cfb2a5)
