@@ -2,6 +2,21 @@
 
 Changes are listed here with links to the corresponding GitHub commits. This file starts with the restored single-script release; earlier history is available in [GitHub's commit history](https://github.com/lamb0985/plexkodijellyfinsync/commits/main).
 
+## 2026-11-23 — Unified Dracula Web UI and compact dashboard
+
+### Changed
+
+- Moved playback tracking to `/` and live logs to `/logs`; updated page navigation and documentation. The old `/tracker` route is intentionally removed.
+- Added the same logo, **PLEX KODI JELLYFIN SYNC** heading, and Dashboard, Logs, Sync, Status, Reset, Env controls to each page. The controls wrap on narrow embedded views.
+- Removed file paths and repeated percentage text from Dashboard cards. Playback time and total duration now share one line. Retained each platform's existing top border and progress colors.
+- Matched the **Continue Watching | In Progress** and **On Deck | Up Next** section heading format.
+- Applied Dracula Classic colors to the Web UI chrome while preserving platform colors and ANSI log colors.
+
+### Rollback
+
+- Git branch: `rollback/pre-dracula-unified-header-20261123` at `50a70f16963a3a0a92c31c7e75ac47a795c58381`.
+- To restore the prior image, deploy Docker Hub tag `sha-50a70f16963a3a0a92c31c7e75ac47a795c58381` after its workflow has published it, or rebuild from that branch. Preserve mounted `/config`, `/logs`, and `/scripts`.
+
 ## 2026-11-23 — Display blank log rows in Dashboard
 
 [Source commit `ff9e051`](https://github.com/lamb0985/plexkodijellyfinsync/commit/ff9e05140b1795666e2e8c7c9451e7057e68f154)
