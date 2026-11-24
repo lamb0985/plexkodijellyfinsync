@@ -5,6 +5,8 @@ set -e
 PUID=${PUID:-1000}
 PGID=${PGID:-100}
 UMASK=${UMASK:-0002}
+COLUMNS=${COLUMNS:-160}
+export COLUMNS
 
 # Validate UMASK
 case "$UMASK" in
