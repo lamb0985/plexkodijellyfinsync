@@ -149,7 +149,7 @@ def run_command_logged(cmd, columns=None):
     env = os.environ.copy()
     env["PKJSYNC_WEB_LOG"] = "1"
     env.pop("NO_COLOR", None)
-    width = columns if columns is not None else browser_log_columns
+    width = columns if columns is not None else max(160, browser_log_columns or 0)
     if width is not None:
         env["COLUMNS"] = str(width)
     with open(LOG_FILE, "a") as f:
@@ -198,6 +198,7 @@ def status_page():
         return "Error: 'status.html' not found.", 404
 
 @app.route("/", methods=["GET"])
+@app.route("/dashboard", methods=["GET"])
 #@requires_auth
 def homepage():
     try:

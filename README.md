@@ -8,8 +8,8 @@ Sync movie and TV playback progress and watched status among **Plex, Kodi, and J
 
 ## Web UI
 
-- `/` is the playback Dashboard. **Continue Watching | In Progress** and **On Deck | Up Next** use compact Plex, Kodi, and Jellyfin cards with a single `current / duration` line and progress bar. Video file paths and duplicate percentage labels are omitted.
-- `/logs` contains live colored sync output, the command input, and Jump to latest. The log width continues to follow the available viewport width.
+- `/` and `/dashboard` serve the playback Dashboard. **Continue Watching | In Progress** and **On Deck | Up Next** use compact Plex, Kodi, and Jellyfin cards with a single `current / duration` line and progress bar. Video file paths and duplicate percentage labels are omitted.
+- `/logs` contains live colored sync output, the command input, and Jump to latest. New manual syncs follow the available log viewport width; unattended syncs use a 160-column baseline so their saved tables stay readable.
 - `/status-page` shows saved sync state; `/env` edits configuration. The JSON `/status` and `/api/logs` endpoints remain available. `/tracker` is no longer served.
 - Every page displays the logo and **PLEX KODI JELLYFIN SYNC**, followed by Dashboard, Logs, Sync, Status, Reset, and Env controls in that order. The controls wrap in narrow Organizr frames.
 - The interface uses the Dracula Classic palette for backgrounds, text, borders, and controls. Plex, Kodi, and Jellyfin retain their existing platform accent colors.

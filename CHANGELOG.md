@@ -2,6 +2,19 @@
 
 Changes are listed here with links to the corresponding GitHub commits. This file starts with the restored single-script release; earlier history is available in [GitHub's commit history](https://github.com/lamb0985/plexkodijellyfinsync/commits/main).
 
+## 2026-11-23 — Repair Dashboard route and log layout
+
+### Fixed
+
+- Added the explicit `/dashboard` route and pointed every Dashboard control to it while keeping `/` available. Updated the `FLASK_TRACKER` example URL without renaming the setting.
+- Restored the prior Logs page colors and panel styling. Saved Rich tables keep their original line breaks; new manual sync output uses the measured log width, while unattended syncs use a 160-column baseline.
+- Published the compact card layout together with all route and visual changes in one image build, avoiding intermediate image revisions with mismatched pages. The playback Dashboard has no file path or percentage line.
+
+### Rollback
+
+- Git branch: `rollback/pre-dashboard-and-log-layout-fix-20261123` at `0b000c6ad1b0c5e432a562725edce777b176e8bf`.
+- Previous published image: `lamb0985/plexkodijellyfinsync:sha-e32c4fde4973d1173082a71defdb7ed2cf003a0d`. Preserve mounted `/config`, `/logs`, and `/scripts`.
+
 ## 2026-11-23 — Unified Dracula Web UI and compact dashboard
 
 ### Changed

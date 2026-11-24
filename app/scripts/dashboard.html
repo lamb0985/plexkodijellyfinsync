@@ -1,12 +1,12 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Plex Kodi Jellyfin Sync</title><style>
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Logs | Plex Kodi Jellyfin Sync</title><style>
     .pkjs-app {
-      --bg:#282a36; --surface:#282a36; --panel:#282a36; --panel2:#44475a;
-      --border:#44475a; --text:#f8f8f2; --muted:#6272a4; --purple:#bd93f9;
+      --bg:#282a36; --surface:#1f2130; --panel:#21222c; --panel2:#2b2d3a;
+      --border:#44475a; --text:#f8f8f2; --muted:#b2b7cf; --purple:#bd93f9;
       --cyan:#8be9fd; --green:#50fa7b; --orange:#ffb86c; --red:#ff5555;
       color:var(--text); font:16px/1.5 system-ui,-apple-system,Segoe UI,sans-serif;
       background:radial-gradient(circle at top right,rgba(189,147,249,.12),transparent 28%),
                  radial-gradient(circle at top left,rgba(139,233,253,.08),transparent 24%),
-                 linear-gradient(180deg,#282a36,var(--bg) 170px);
+                 linear-gradient(180deg,#252733,var(--bg) 170px);
       border:1px solid #44475a; border-radius:16px; overflow:hidden;
       box-shadow:0 20px 55px rgba(0,0,0,.35);
     }
@@ -15,17 +15,17 @@
     .pkjs-app button { color:var(--text); }
     .pkjs-app .top {
       display:flex; align-items:center; justify-content:space-between; gap:18px; flex-wrap:wrap;
-      padding:19px 26px; border-bottom:1px solid #44475a; background:rgba(40,42,54,.94);
+      padding:19px 26px; border-bottom:1px solid #44475a; background:rgba(33,34,44,.94);
     }
     .pkjs-app .brand { display:flex; align-items:center; gap:15px; min-width:0; }
     .pkjs-app .logo-frame {
       width:58px; height:58px; display:grid; place-items:center; flex:none;
       border:1px solid rgba(189,147,249,.34); border-radius:15px;
-      background:linear-gradient(145deg,#44475a,#282a36);
+      background:linear-gradient(145deg,#393c50,#222432);
       box-shadow:0 8px 22px rgba(0,0,0,.24),inset 0 1px 0 rgba(255,255,255,.08);
     }
     .pkjs-app .logo-frame img { width:44px; height:44px; display:block; }
-    .pkjs-app .preview-flag { margin-left:8px; color:#bd93f9; letter-spacing:.03em; font-weight:650; text-transform:none; }
+    .pkjs-app .preview-flag { margin-left:8px; color:#d2b9ff; letter-spacing:.03em; font-weight:650; text-transform:none; }
     .pkjs-app .eyebrow { color:var(--cyan); font-size:12px; font-weight:800; letter-spacing:.15em; text-transform:uppercase; }
     .pkjs-app h1 { font-size:26px; line-height:1.2; margin:4px 0 0; color:var(--text); }
     .pkjs-app h2 { font-size:19px; margin:0; color:var(--text); }
@@ -35,28 +35,28 @@
       display:flex; align-items:center; gap:9px; flex-wrap:wrap;
     }
     .pkjs-app .button {
-      border:1px solid rgba(98,114,164,.5); background:#44475a;
+      border:1px solid rgba(98,114,164,.5); background:linear-gradient(#36384a,#2a2d3c);
       border-radius:10px; padding:9px 13px; font-size:14px; font-weight:700;
       min-height:40px; cursor:pointer;
     }
     .pkjs-app .button:hover { filter:brightness(1.1); }
-    .pkjs-app .button.primary { background:#bd93f9; border-color:#bd93f9; color:#282a36; }
+    .pkjs-app .button.primary { background:linear-gradient(#c49dff,#a57bf6); border-color:#c49dff; color:#171720; }
     .pkjs-app .button.subtle { background:transparent; }
-    .pkjs-app .button.danger { color:#ff5555; }
+    .pkjs-app .button.danger { color:#ffb6b6; }
     .pkjs-app .nav {
       padding:11px 26px; border-bottom:1px solid rgba(98,114,164,.3);
-      background:rgba(40,42,54,.68); gap:6px;
+      background:rgba(31,33,48,.68); gap:6px;
     }
     .pkjs-app .nav button {
       border:0; border-radius:8px; background:transparent; padding:8px 13px;
       font-size:14px; font-weight:700; cursor:pointer; color:var(--muted);
     }
-    .pkjs-app .nav button[aria-selected="true"] { background:#44475a; color:var(--text); box-shadow:inset 0 -2px 0 var(--purple); }
+    .pkjs-app .nav button[aria-selected="true"] { background:#3a3b52; color:var(--text); box-shadow:inset 0 -2px 0 var(--purple); }
     .pkjs-app main { padding:23px 26px 30px; display:grid; grid-template-columns:minmax(0,1fr); gap:18px; min-width:0; }
     .pkjs-app main > *, .pkjs-app .card { min-width:0; }
     .pkjs-app .overview { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:12px; }
     .pkjs-app .card {
-      background:#282a36;
+      background:linear-gradient(180deg,rgba(52,55,70,.3),rgba(33,34,44,.98));
       border:1px solid rgba(98,114,164,.28); border-radius:14px;
       box-shadow:0 12px 28px rgba(0,0,0,.18),inset 0 1px 0 rgba(255,255,255,.02);
       padding:17px;
@@ -79,29 +79,29 @@
     .pkjs-app .log-head { display:flex; justify-content:space-between; gap:12px; align-items:center; margin:0 0 9px; }
     .pkjs-app .text-button { border:0; background:transparent; color:var(--cyan); padding:4px 0; font-size:13px; font-weight:700; cursor:pointer; }
     .pkjs-app .log {
-      background:#282a36; border:1px solid rgba(98,114,164,.3); border-radius:10px;
-      padding:13px 14px; overflow-x:auto; white-space:pre; margin:0; color:#f8f8f2;
+      background:#181922; border:1px solid rgba(98,114,164,.3); border-radius:10px;
+      padding:13px 14px; overflow-x:auto; white-space:pre; margin:0; color:#e6e7f2;
       font:13px/1.48 ui-monospace,SFMono-Regular,Consolas,monospace;
     }
     /* An empty log row must occupy a line so saved Rich spacing is visible. */
     .pkjs-app .log-line { min-height:1.48em; }
     .pkjs-app .terminal-input, .pkjs-app textarea {
       width:100%; border:1px solid rgba(98,114,164,.42); border-radius:9px;
-      background:#282a36; color:var(--text); padding:11px 12px; outline:none;
+      background:#1b1d28; color:var(--text); padding:11px 12px; outline:none;
     }
     .pkjs-app .terminal-input { margin-top:11px; font:14px ui-monospace,SFMono-Regular,Consolas,monospace; }
     .pkjs-app input:focus, .pkjs-app textarea:focus { border-color:var(--purple); box-shadow:0 0 0 3px rgba(189,147,249,.16); }
     .pkjs-app .status-panel { display:none; }
     .pkjs-app .status-panel.open { display:block; }
-    .pkjs-app .status-panel pre { background:#282a36; border:1px solid rgba(98,114,164,.3); border-radius:10px; padding:13px; overflow:auto; font:13px/1.5 ui-monospace,SFMono-Regular,Consolas,monospace; }
+    .pkjs-app .status-panel pre { background:#181922; border:1px solid rgba(98,114,164,.3); border-radius:10px; padding:13px; overflow:auto; font:13px/1.5 ui-monospace,SFMono-Regular,Consolas,monospace; }
     .pkjs-app .platforms { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px; margin-top:14px; }
     .pkjs-app .platform {
-      border-radius:9px; background:#282a36; padding:11px; border:1px solid rgba(98,114,164,.25);
+      border-radius:9px; background:#1b1d28; padding:11px; border:1px solid rgba(98,114,164,.25);
       border-top:3px solid var(--platform); min-width:0;
     }
     .pkjs-app .platform .pname { font-weight:700; font-size:13px; }
     .pkjs-app .platform strong { display:block; margin-top:5px; font-size:15px; }
-    .pkjs-app .bar { height:6px; border-radius:10px; background:#44475a; overflow:hidden; margin-top:8px; }
+    .pkjs-app .bar { height:6px; border-radius:10px; background:#343746; overflow:hidden; margin-top:8px; }
     .pkjs-app .bar span { display:block; width:var(--progress); height:100%; background:var(--platform); }
     .pkjs-app .section-label { margin:3px 0 -8px; color:var(--cyan); text-transform:uppercase; font-size:12px; font-weight:800; letter-spacing:.1em; }
     .pkjs-app .item-title { font-size:16px; font-weight:750; }
@@ -128,7 +128,7 @@
 html,body{margin:0;min-height:100%;background:#282a36}
 .pkjs-app{min-height:100vh;border:0;border-radius:0;box-shadow:none}
 .pkjs-app .nav a{display:inline-block;border-radius:8px;padding:8px 13px;color:var(--muted);text-decoration:none;font-size:14px;font-weight:700}
-.pkjs-app .nav a:hover,.pkjs-app .nav a[aria-current="page"]{background:#44475a;color:var(--text)}
+.pkjs-app .nav a:hover,.pkjs-app .nav a[aria-current="page"]{background:#3a3b52;color:var(--text)}
 .pkjs-app .nav a[aria-current="page"]{box-shadow:inset 0 -2px 0 var(--purple)}
 .pkjs-app .log{width:100%;max-width:100%;height:clamp(360px,calc(100vh - 380px),820px);overflow:auto}
 .pkjs-app .status-panel{display:none}
@@ -148,7 +148,7 @@ html,body{margin:0;min-height:100%;background:#282a36}
 @media(max-width:700px){.pkjs-app .top{padding:14px 16px}.pkjs-app .page-actions{justify-content:flex-start;flex-basis:100%}}
 </style></head><body>
 <div class="pkjs-app">
-<header class="top"><div class="brand"><div class="logo-frame"><img src="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2232%22%20height%3D%2232%22%20viewBox%3D%220%200%2032%2032%22%20role%3D%22img%22%20aria-labelledby%3D%22title%22%3E%0A%20%20%3Ctitle%20id%3D%22title%22%3EPlex%20Kodi%20Jellyfin%20Sync%20icon%3C%2Ftitle%3E%0A%20%20%3Crect%20width%3D%2232%22%20height%3D%2232%22%20rx%3D%227%22%20fill%3D%22%23101827%22%2F%3E%0A%20%20%3Ccircle%20cx%3D%2216%22%20cy%3D%2216%22%20r%3D%2211.3%22%20fill%3D%22none%22%20stroke%3D%22%23253247%22%20stroke-width%3D%223%22%2F%3E%0A%20%20%3Cpath%20d%3D%22M16%204.7a11.3%2011.3%200%200%201%209.8%205.65%22%20fill%3D%22none%22%20stroke%3D%22%23e5a72d%22%20stroke-width%3D%223%22%20stroke-linecap%3D%22round%22%2F%3E%0A%20%20%3Cpath%20d%3D%22M25.8%2021.65A11.3%2011.3%200%200%201%206.2%2021.65%22%20fill%3D%22none%22%20stroke%3D%22%238e69de%22%20stroke-width%3D%223%22%20stroke-linecap%3D%22round%22%2F%3E%0A%20%20%3Cpath%20d%3D%22M6.2%2010.35A11.3%2011.3%200%200%201%2011.6%205.6%22%20fill%3D%22none%22%20stroke%3D%22%2331a5df%22%20stroke-width%3D%223%22%20stroke-linecap%3D%22round%22%2F%3E%0A%20%20%3Cpath%20d%3D%22M13%2010.7%2021.5%2016%2013%2021.3Z%22%20fill%3D%22%23f5f8ff%22%2F%3E%0A%3C%2Fsvg%3E%0A" width="48" height="48" alt="Plex Kodi Jellyfin Sync logo"></div><div><h1>PLEX KODI JELLYFIN SYNC</h1></div></div><nav class="page-actions" aria-label="Pages"><a href="/">Dashboard</a><a href="/logs" aria-current="page">Logs</a><button type="button" class="primary" onclick="syncNow()">Sync</button><a href="/status-page">Status</a><button type="button" class="danger" onclick="resetSync()">Reset</button><a href="/env">Env</a></nav></header>
+<header class="top"><div class="brand"><div class="logo-frame"><img src="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2232%22%20height%3D%2232%22%20viewBox%3D%220%200%2032%2032%22%20role%3D%22img%22%20aria-labelledby%3D%22title%22%3E%0A%20%20%3Ctitle%20id%3D%22title%22%3EPlex%20Kodi%20Jellyfin%20Sync%20icon%3C%2Ftitle%3E%0A%20%20%3Crect%20width%3D%2232%22%20height%3D%2232%22%20rx%3D%227%22%20fill%3D%22%23101827%22%2F%3E%0A%20%20%3Ccircle%20cx%3D%2216%22%20cy%3D%2216%22%20r%3D%2211.3%22%20fill%3D%22none%22%20stroke%3D%22%23253247%22%20stroke-width%3D%223%22%2F%3E%0A%20%20%3Cpath%20d%3D%22M16%204.7a11.3%2011.3%200%200%201%209.8%205.65%22%20fill%3D%22none%22%20stroke%3D%22%23e5a72d%22%20stroke-width%3D%223%22%20stroke-linecap%3D%22round%22%2F%3E%0A%20%20%3Cpath%20d%3D%22M25.8%2021.65A11.3%2011.3%200%200%201%206.2%2021.65%22%20fill%3D%22none%22%20stroke%3D%22%238e69de%22%20stroke-width%3D%223%22%20stroke-linecap%3D%22round%22%2F%3E%0A%20%20%3Cpath%20d%3D%22M6.2%2010.35A11.3%2011.3%200%200%201%2011.6%205.6%22%20fill%3D%22none%22%20stroke%3D%22%2331a5df%22%20stroke-width%3D%223%22%20stroke-linecap%3D%22round%22%2F%3E%0A%20%20%3Cpath%20d%3D%22M13%2010.7%2021.5%2016%2013%2021.3Z%22%20fill%3D%22%23f5f8ff%22%2F%3E%0A%3C%2Fsvg%3E%0A" width="48" height="48" alt="Plex Kodi Jellyfin Sync logo"></div><div><h1>PLEX KODI JELLYFIN SYNC</h1></div></div><nav class="page-actions" aria-label="Pages"><a href="/dashboard">Dashboard</a><a href="/logs" aria-current="page">Logs</a><button type="button" class="primary" onclick="syncNow()">Sync</button><a href="/status-page">Status</a><button type="button" class="danger" onclick="resetSync()">Reset</button><a href="/env">Env</a></nav></header>
 
 <main>
 <section class="card"><div class="log-head"><span class="label">Live Logs</span><button class="text-button" type="button" onclick="document.getElementById('terminal').scrollTop=document.getElementById('terminal').scrollHeight">Jump to latest</button></div><div id="terminal" class="log" role="log" aria-live="off">Connecting to logs…</div><label for="cmdinput" class="label" style="display:block;margin-top:14px">Command</label><input id="cmdinput" class="terminal-input" placeholder="Type command and press Enter" autocomplete="off"></section>
