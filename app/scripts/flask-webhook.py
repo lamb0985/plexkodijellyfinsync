@@ -175,9 +175,9 @@ def plex():
         console.print(f"[yellow]Plex event '{event}' ignored[/yellow]")
     return jsonify({"status": "received", "event": event}), 200
 
-@app.route("/", methods=["GET"])
+@app.route("/logs", methods=["GET"])
 #@requires_auth
-def homepage():
+def logs_homepage():
     try:
         # Locates dashboard.html relative to app.py container or local directory
         base_dir = Path(__file__).resolve().parent
@@ -197,9 +197,9 @@ def status_page():
     except FileNotFoundError:
         return "Error: 'status.html' not found.", 404
 
-@app.route("/tracker", methods=["GET"])
+@app.route("/", methods=["GET"])
 #@requires_auth
-def tracker_homepage():
+def homepage():
     try:
         # Locates alt.html directly where app.py lives
         base_dir = Path(__file__).resolve().parent
@@ -209,7 +209,7 @@ def tracker_homepage():
             if p.exists():
                 return p.read_text(encoding="utf-8")
                 
-        return "Error: 'alt.html' not found on application path.", 404
+        return "Error: 'tracker.html' not found on application path.", 404
     except Exception as e:
         return f"Error loading tracker dashboard: {str(e)}", 500
 
