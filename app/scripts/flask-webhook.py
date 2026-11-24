@@ -10,7 +10,7 @@ import stat
 import hashlib
 from io import StringIO
 from flask import Flask, request, jsonify, Response, session, render_template_string, make_response
-from flask_socketio import SocketIO, emit
+from flask_socketio import SocketIO
 from dotenv import load_dotenv, dotenv_values
 from dotenv.parser import parse_stream
 from pathlib import Path
@@ -189,6 +189,13 @@ def logs_homepage():
     except Exception as e:
         return f"Error loading dashboard: {str(e)}", 500
 
+@app.route("/ui-theme.css", methods=["GET"])
+def ui_theme():
+    css = (Path(__file__).resolve().parent / "webui-theme.css").read_text(encoding="utf-8")
+    response = Response(css, mimetype="text/css")
+    response.headers["Cache-Control"] = "no-cache"
+    return response
+
 @app.route("/status-page", methods=["GET"])
 def status_page():
     try:
@@ -264,24 +271,6 @@ def status():
             console.print(f"[red]Status read failed:[/red] {e}")
             return jsonify({"status":"❌ Failed to read", "error": str(e)}), 500
     return jsonify({"status":"📭 No sync status", "path": str(SYNC_STATE_FILE)}), 404
-
-@socketio.on("run_cmd")
-def handle_run_cmd(cmd):
-    try:
-        process = subprocess.Popen(["bash", "-c", cmd], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, bufsize=1, env=os.environ.copy())
-        def stream_proc():
-            for line in process.stdout:
-                socketio.emit("cmd_output", line)
-                with open(LOG_FILE, "a") as f:
-                    f.write(line)
-            err = process.stderr.read()
-            if err:
-                socketio.emit("cmd_output", err)
-                with open(LOG_FILE, "a") as f:
-                    f.write(err)
-        threading.Thread(target=stream_proc, daemon=True).start()
-    except Exception as e:
-        emit("cmd_output", f"Error: {e}")
 
 def tail_log():
     with open(LOG_FILE) as f:

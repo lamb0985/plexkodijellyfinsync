@@ -1,0 +1,151 @@
+/* Shared Dracula UI chrome. Log ANSI colors and platform accents are defined elsewhere. */
+:root {
+  color-scheme: dark;
+  --ui-bg: #282a36;
+  --ui-surface: #21222c;
+  --ui-control: #343746;
+  --ui-border: #44475a;
+  --ui-text: #f8f8f2;
+  --ui-muted: #b2b7cf;
+  --ui-focus: #815cd6;
+  --ui-danger: #de5735;
+}
+html, body { width: 100%; min-width: 0; background: var(--ui-bg); }
+body, body:has(.pkjs-app) { background: var(--ui-bg); }
+.pkjs-app { background: var(--ui-bg); }
+
+/* One header treatment for Dashboard, Logs, Status, and Env. */
+.page-top, .pkjs-app .top {
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: 14px; padding: 16px 24px;
+  background: var(--ui-surface); border-bottom: 1px solid var(--ui-border);
+}
+.page-top .brand, .pkjs-app .top .brand {
+  display: flex; align-items: center; gap: 12px; flex: 0 0 auto;
+  min-width: 0; width: auto;
+}
+.page-top .logo-frame, .pkjs-app .top .logo-frame {
+  display: grid; place-items: center; flex: none; width: 42px; height: 42px;
+  border: 1px solid #6272a4; border-radius: 10px;
+  background: var(--ui-bg); box-shadow: none;
+}
+.page-top .logo-frame img, .pkjs-app .top .logo-frame img { width: 30px; height: 30px; }
+.page-top .brand h1, .pkjs-app .top .brand h1 {
+  display: flex; align-items: center; flex-wrap: wrap; gap: .32em;
+  margin: 0; color: var(--ui-text); font-size: clamp(16px, 1.3vw, 20px);
+  line-height: 1.15; font-weight: 800; letter-spacing: .025em;
+}
+.page-top .page-links, .pkjs-app .top .page-links,
+.page-top .page-actions, .pkjs-app .top .page-actions {
+  display: flex; align-items: center; justify-content: flex-end;
+  flex: 0 0 auto; gap: 6px; min-width: 0; flex-wrap: wrap;
+}
+.page-top .page-links, .pkjs-app .top .page-links { margin-left: auto; }
+.page-top .page-actions, .pkjs-app .top .page-actions { margin-left: 10px; }
+.page-top .page-links a, .pkjs-app .top .page-links a,
+.page-top .page-actions button, .pkjs-app .top .page-actions button {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-height: 36px; padding: 8px 11px; margin: 0;
+  border: 1px solid var(--ui-border); border-radius: 9px;
+  background: var(--ui-control); color: var(--ui-text);
+  text-decoration: none; white-space: nowrap; box-shadow: none;
+  font: 700 13px/1 system-ui, -apple-system, Segoe UI, sans-serif;
+  cursor: pointer;
+}
+.page-top .page-links a:hover, .page-top .page-links a[aria-current="page"],
+.pkjs-app .top .page-links a:hover, .pkjs-app .top .page-links a[aria-current="page"] {
+  border-color: var(--ui-focus); background: var(--ui-focus);
+  color: var(--ui-text); box-shadow: none;
+}
+.page-top .page-actions button.primary, .pkjs-app .top .page-actions button.primary {
+  border-color: #50fa7b; background: #50fa7b; color: var(--ui-bg); box-shadow: none;
+}
+.page-top .page-actions button.danger, .pkjs-app .top .page-actions button.danger {
+  border-color: var(--ui-danger); background: transparent;
+  color: var(--ui-danger); box-shadow: none;
+}
+.page-top .page-links a:focus-visible, .page-top .page-actions button:focus-visible,
+.pkjs-app .top .page-links a:focus-visible, .pkjs-app .top .page-actions button:focus-visible {
+  outline: 2px solid var(--ui-focus); outline-offset: 3px;
+}
+
+/* Dashboard: lines group items, while platform labels and progress retain their colors. */
+.fullscreen-panel { padding: 24px 26px 48px; }
+.media-status-list { gap: 0; }
+.section-header, .section-header.inprogress, .section-header.upnext {
+  margin: 20px 0 0; padding: 0 0 11px;
+  border-bottom: 1px solid var(--ui-border);
+  color: var(--ui-text); font-size: 14px; letter-spacing: .08em;
+}
+.media-row {
+  min-width: 0; padding: 17px 0; margin: 0;
+  border: 0; border-bottom: 1px solid var(--ui-border);
+  border-radius: 0; background: transparent; box-shadow: none;
+}
+.media-title-area { align-items: center; margin-bottom: 0; font-size: 16px; }
+.platform-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; margin-top: 12px; }
+.platform-badge {
+  display: grid; grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center; gap: 6px; padding: 0;
+  border: 0; border-radius: 0; background: transparent;
+}
+.platform-badge .platform-name { min-width: 0; color: var(--platform); font-size: 13px; }
+.platform-badge .platform-time { margin: 0; color: var(--ui-text); font-size: 13px; white-space: nowrap; }
+.platform-badge .platform-time span { color: var(--ui-text); }
+.platform-badge .progress-wrapper {
+  grid-column: 1 / -1; height: 4px; margin: 0;
+  background: #424450;
+}
+
+/* Logs: retain all rendered ANSI colors, width measurement, and stream behavior. */
+.pkjs-app main { padding: 24px 26px 30px; }
+.pkjs-app main > .card {
+  padding: 0; background: transparent; border: 0;
+  border-radius: 0; box-shadow: none;
+}
+.pkjs-app main > .card:hover { border-color: transparent; }
+.pkjs-app .log-head { margin-bottom: 10px; }
+.pkjs-app .log-head .label { color: var(--ui-text); font-size: 14px; }
+.pkjs-app .log {
+  height: clamp(400px, calc(100vh - 200px), 980px);
+  background: #191a21; border: 1px solid var(--ui-border);
+  border-radius: 8px; box-shadow: none;
+}
+
+/* Status and Env: quiet panels around dense workspaces. */
+.page-status main, .page-env main { padding: 24px 26px 48px; }
+.status-card, .page-env .card {
+  min-width: 0; padding: 20px; background: var(--ui-surface);
+  border: 1px solid var(--ui-border); border-radius: 8px; box-shadow: none;
+}
+.status-card pre, .page-env textarea {
+  background: #191a21; border: 1px solid var(--ui-border); border-radius: 7px;
+}
+.page-env .note {
+  margin: 0 0 16px; background: transparent;
+  border-left-color: #a39514; border-radius: 0;
+}
+.page-env form button.primary {
+  background: #50fa7b; border-color: #50fa7b; color: var(--ui-bg);
+}
+
+@media (max-width: 1120px) {
+  .page-top .brand, .pkjs-app .top .brand { width: 100%; }
+  .page-top .page-links, .pkjs-app .top .page-links { margin-left: auto; }
+}
+@media (max-width: 700px) {
+  .page-top, .pkjs-app .top { padding: 14px 16px; }
+  .page-top .page-actions, .pkjs-app .top .page-actions {
+    flex: 0 0 auto; margin-left: auto; justify-content: flex-end;
+  }
+  .fullscreen-panel, .pkjs-app main, .page-status main, .page-env main { padding: 18px 16px 36px; }
+  .platform-grid { gap: 10px; }
+  .platform-badge .platform-name, .platform-badge .platform-time { font-size: 12px; }
+}
+@media (max-width: 560px) {
+  .page-top .logo-frame, .pkjs-app .top .logo-frame { width: 42px; height: 42px; }
+  .page-top .logo-frame img, .pkjs-app .top .logo-frame img { width: 30px; height: 30px; }
+  .platform-grid { grid-template-columns: 1fr; }
+  .platform-badge { grid-template-columns: 72px 1fr; }
+  .platform-badge .progress-wrapper { grid-column: 1 / -1; }
+}

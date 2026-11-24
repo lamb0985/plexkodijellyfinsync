@@ -2,6 +2,19 @@
 
 Changes are listed here with links to the corresponding GitHub commits. This file starts with the restored single-script release; earlier history is available in [GitHub's commit history](https://github.com/lamb0985/plexkodijellyfinsync/commits/main).
 
+## 2026-11-23 — Refine Dashboard and Web UI surfaces
+
+### Changed
+
+- Apply one shared Dracula UI stylesheet to Dashboard, Logs, Status, and Env. The header, controls, spacing, and workspace surfaces now use the same rules across page endpoints.
+- Replace the Dashboard's nested card framing with compact, separated media rows. Keep each platform's color in its label and progress bar, with the time and duration on one line.
+- Give Logs a quieter console frame while preserving ANSI log colors, live updates, and automatic log width calculation.
+- Remove the unused command input on Logs and its server-side `run_cmd` socket handler. Sync and Reset remain available in the header.
+
+### Rollback
+
+- Previous commit: `96abb92efd54bfa8a7a8cc8fc3be5475ddbaae8c`.
+
 ## 2026-11-23 — Make headers consistent across page endpoints
 
 ### Fixed
