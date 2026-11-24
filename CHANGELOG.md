@@ -2,6 +2,18 @@
 
 Changes are listed here with links to the corresponding GitHub commits. This file starts with the restored single-script release; earlier history is available in [GitHub's commit history](https://github.com/lamb0985/plexkodijellyfinsync/commits/main).
 
+## 2026-11-23 — Make headers consistent across page endpoints
+
+### Fixed
+
+- Give Dashboard, Logs, Status, and Env the same header button dimensions, spacing, and responsive logo size.
+- Restore Dracula green for Sync and functional red for Reset on all four pages. Older page-specific CSS rules had overridden those colors outside Logs.
+- Keep the platform title accents and log output colors unchanged.
+
+### Rollback
+
+- Previous commit: `6958cc3d71647290ea7290fcdfd0f29ff3a6b53c` (branch `rollback/pre-header-style-consistency-20261123`).
+
 ## 2026-11-23 — Refine Web UI header controls
 
 ### Changed

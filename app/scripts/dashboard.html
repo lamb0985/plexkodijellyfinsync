@@ -172,6 +172,18 @@ html,body{margin:0;min-height:100%;background:#282a36}
 .pkjs-app .page-actions{flex:0 0 auto;margin-left:16px;justify-content:flex-end}
 @media(max-width:1120px){.pkjs-app .page-links{margin-left:auto;justify-content:flex-end}.pkjs-app .page-actions{margin-left:16px;justify-content:flex-end}}
 @media(max-width:700px){.pkjs-app .page-links{margin-left:auto;justify-content:flex-end}.pkjs-app .page-actions{margin-left:auto;justify-content:flex-end}}
+
+/* Final shared header controls: identical shape, colors, and logo sizing on every page. */
+.pkjs-app .top .brand{gap:14px;flex:0 0 auto}
+.pkjs-app .top .logo-frame{width:58px;height:58px}
+.pkjs-app .top .logo-frame img{width:44px;height:44px}
+.pkjs-app .top .page-links,.pkjs-app .top .page-actions{gap:9px}
+.pkjs-app .top .page-links a,.pkjs-app .top .page-actions button{display:inline-flex;align-items:center;justify-content:center;min-height:42px;padding:9px 15px;margin:0;border:1px solid #6272a4;border-radius:11px;background:#343746;color:#f8f8f2;text-decoration:none;font:700 14px/1 system-ui,-apple-system,Segoe UI,sans-serif;white-space:nowrap;box-shadow:none;cursor:pointer}
+.pkjs-app .top .page-links a:hover,.pkjs-app .top .page-links a[aria-current="page"]{border-color:#815cd6;background:#815cd6;color:#f8f8f2;box-shadow:none}
+.pkjs-app .top .page-actions button.primary{border-color:#50fa7b;background:#50fa7b;color:#282a36;box-shadow:none}
+.pkjs-app .top .page-actions button.danger{border-color:#de5735;background:transparent;color:#de5735;box-shadow:none}
+@media(max-width:700px){.pkjs-app .top .page-links a,.pkjs-app .top .page-actions button{min-height:38px;padding:8px 11px;font-size:13px}}
+@media(max-width:560px){.pkjs-app .top .logo-frame{width:58px;height:58px}.pkjs-app .top .logo-frame img{width:44px;height:44px}}
 </style></head><body>
 <div class="pkjs-app">
 <header class="top"><div class="brand"><div class="logo-frame"><img src="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2232%22%20height%3D%2232%22%20viewBox%3D%220%200%2032%2032%22%20role%3D%22img%22%20aria-labelledby%3D%22title%22%3E%0A%20%20%3Ctitle%20id%3D%22title%22%3EPlex%20Kodi%20Jellyfin%20Sync%20icon%3C%2Ftitle%3E%0A%20%20%3Crect%20width%3D%2232%22%20height%3D%2232%22%20rx%3D%227%22%20fill%3D%22%23101827%22%2F%3E%0A%20%20%3Ccircle%20cx%3D%2216%22%20cy%3D%2216%22%20r%3D%2211.3%22%20fill%3D%22none%22%20stroke%3D%22%23253247%22%20stroke-width%3D%223%22%2F%3E%0A%20%20%3Cpath%20d%3D%22M16%204.7a11.3%2011.3%200%200%201%209.8%205.65%22%20fill%3D%22none%22%20stroke%3D%22%23e5a72d%22%20stroke-width%3D%223%22%20stroke-linecap%3D%22round%22%2F%3E%0A%20%20%3Cpath%20d%3D%22M25.8%2021.65A11.3%2011.3%200%200%201%206.2%2021.65%22%20fill%3D%22none%22%20stroke%3D%22%238e69de%22%20stroke-width%3D%223%22%20stroke-linecap%3D%22round%22%2F%3E%0A%20%20%3Cpath%20d%3D%22M6.2%2010.35A11.3%2011.3%200%200%201%2011.6%205.6%22%20fill%3D%22none%22%20stroke%3D%22%2331a5df%22%20stroke-width%3D%223%22%20stroke-linecap%3D%22round%22%2F%3E%0A%20%20%3Cpath%20d%3D%22M13%2010.7%2021.5%2016%2013%2021.3Z%22%20fill%3D%22%23f5f8ff%22%2F%3E%0A%3C%2Fsvg%3E%0A" width="48" height="48" alt="Plex Kodi Jellyfin Sync logo"></div><div><h1><span class="plex-word">PLEX</span> <span class="kodi-word">KODI</span> <span class="jellyfin-word">JELLYFIN</span> <span class="sync-word">SYNC</span></h1></div></div><nav class="page-links" aria-label="Pages"><a href="/dashboard">Dashboard</a><a href="/logs" aria-current="page">Logs</a><a href="/status-page">Status</a><a href="/env">Env</a></nav><div class="page-actions" aria-label="Actions"><button type="button" class="primary" onclick="syncNow()">Sync</button><button type="button" class="danger" onclick="resetSync()">Reset</button></div></header>
