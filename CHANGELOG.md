@@ -2,6 +2,18 @@
 
 Changes are listed here with links to the corresponding GitHub commits. This file starts with the restored single-script release; earlier history is available in [GitHub's commit history](https://github.com/lamb0985/plexkodijellyfinsync/commits/main).
 
+## 2026-11-23 — Refine Web UI header controls
+
+### Changed
+
+- Color the PLEX, KODI, and JELLYFIN title words with their existing platform accents; color SYNC with Dracula green.
+- Place Dashboard, Logs, Status, and Env in one group of equal-shape navigation buttons. Keep Sync and Reset together at the far right on every page, with a deliberate wrap for narrow Organizr views.
+- Use the Dracula UI palette for header surfaces and floating controls, Current Line borders, Functional Purple for active/focus states, and Functional Red for Reset. Log output and media platform colors are unchanged.
+
+### Rollback
+
+- Previous source/image commit: `15fae812c0d7c5517ea38a795892d753029fc44a` (`sha-15fae812c0d7c5517ea38a795892d753029fc44a`).
+
 ## 2026-11-23 — Repair Dashboard route and log layout
 
 ### Fixed
