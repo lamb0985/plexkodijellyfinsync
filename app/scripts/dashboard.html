@@ -128,8 +128,8 @@
 html,body{margin:0;min-height:100%;background:#282a36}
 .pkjs-app{min-height:100vh;border:0;border-radius:0;box-shadow:none}
 .pkjs-app .nav a{display:inline-block;border-radius:8px;padding:8px 13px;color:var(--muted);text-decoration:none;font-size:14px;font-weight:700}
-.pkjs-app .nav a:hover,.pkjs-app .nav a.active{background:#3a3b52;color:var(--text)}
-.pkjs-app .nav a.active{box-shadow:inset 0 -2px 0 var(--purple)}
+.pkjs-app .nav a:hover,.pkjs-app .nav a[aria-current="page"]{background:#3a3b52;color:var(--text)}
+.pkjs-app .nav a[aria-current="page"]{box-shadow:inset 0 -2px 0 var(--purple)}
 .pkjs-app .log{width:100%;max-width:100%;height:clamp(360px,calc(100vh - 380px),820px);overflow:auto}
 .pkjs-app .status-panel{display:none}
 .pkjs-app .status-panel.open{display:block}
