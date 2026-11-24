@@ -2,7 +2,7 @@
 
 # Plex Kodi Jellyfin Sync
 
-Sync movie and TV playback progress and watched status among **Plex, Kodi, and Jellyfin**. The container runs a periodic sync every 15 minutes and serves the existing Flask dashboard, webhook, status, and tracker pages on port 5000.
+Sync movie and TV playback progress and watched status among **Plex, Kodi, and Jellyfin**. The container runs a periodic sync every 15 minutes and serves the existing Flask dashboard, logs, webhook, status, and environment pages on port 5000.
 
 ![Sync icon](assets/icon.svg) Plex, Kodi, and Jellyfin use the same media files. The sync script matches items by relative media path, compares each platform against its previous snapshot, and applies a single detected change to the others. Conflicting changes are reported and left for review. On Deck / Up Next is reserved for unwatched TV episodes; an unwatched movie is not labeled Up Next.
 
@@ -27,11 +27,11 @@ docker logs -f plexkodijellyfinsync
 
 The example Compose file mounts only host `/config`, `/logs`, and `/scripts` directories; `/app` comes from the image. On each container start, the entrypoint refreshes `/scripts/plexkodijellyfinsync.py` from the image. The Flask server and dashboard run from `/app/scripts`, so pulling an older image restores their earlier versions without overwriting host-mounted web files. Local edits to the mounted main script will be overwritten on startup; edits to `/scripts/flask-webhook.py` or `/scripts/dashboard.html` do not affect the image-served Web UI. If an existing container mounts `/app`, remove that mount before updating. After pulling an image, recreate the container to use it. Preserve your own `/config/.env` and `/config/.last_sync_state.json`.
 
-The Flask server exposes `/`, `/plex`, `/sync`, `/reset`, `/status`, `/tracker`, and `/env`. Configure the Plex webhook to point to the container's reachable `http://YOUR_HOST:5000/plex` address if you use Plex webhooks.
+The Flask server exposes `/` (tracker dashboard), `/logs` (live logs), `/plex`, `/sync`, `/reset`, `/status`, `/status-page`, and `/env`. Configure the Plex webhook to point to the container's reachable `http://YOUR_HOST:5000/plex` address if you use Plex webhooks.
 
 ## Edit the environment file in the Web UI
 
-Click **Environment** on the main dashboard, or open `/env` directly. The page displays the complete mounted `/config/.env` file for editing, including passwords and tokens, and saves it without rearranging comments or blank lines. It requires HTTP Basic authentication using the existing `FLASK_USERNAME` and `FLASK_PASSWORD` from `/config/.env`. Set both to your own nonempty values before opening the editor; the built-in `admin` / `changeme` fallback cannot access it. Restart the container after saving to apply the settings. Keep the page private and use HTTPS through a reverse proxy if accessing it beyond your trusted network.
+Click **Env** in the page navigation, or open `/env` directly. The page displays the complete mounted `/config/.env` file for editing, including passwords and tokens, and saves it without rearranging comments or blank lines. It requires HTTP Basic authentication using the existing `FLASK_USERNAME` and `FLASK_PASSWORD` from `/config/.env`. Set both to your own nonempty values before opening the editor; the built-in `admin` / `changeme` fallback cannot access it. Restart the container after saving to apply the settings. Keep the page private and use HTTPS through a reverse proxy if accessing it beyond your trusted network.
 
 By default, the other Web UI pages and its live command socket retain their existing access behavior. **Protecting only `/env` does not protect the file**: the dashboard's command box can run shell commands. To require the same username and password across the dashboard, tracker, sync/status pages, and command socket, add this line to your host's `/config/.env` alongside `FLASK_USERNAME` and `FLASK_PASSWORD`:
 
