@@ -8,56 +8,82 @@
     <link rel="stylesheet" href="https://googleapis.com">
     <link rel="stylesheet" href="https://cloudflare.com">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-    <style>:root{color-scheme:dark;--bg:#282a36;--panel:#21222c;--border:#44475a;--text:#f8f8f2;--muted:#b2b7cf;--purple:#bd93f9;--cyan:#8be9fd;--good:#50fa7b;--warn:#ffb86c}
+    <style>:root{color-scheme:dark;--bg:#282a36;--panel:#282a36;--border:#44475a;--text:#f8f8f2;--muted:#6272a4;--purple:#bd93f9;--cyan:#8be9fd;--good:#50fa7b;--warn:#ffb86c}
 *{box-sizing:border-box}html,body{margin:0;min-height:100%;background:var(--bg);color:var(--text);font:16px/1.5 system-ui,-apple-system,Segoe UI,sans-serif}
-body{background:radial-gradient(circle at top right,rgba(189,147,249,.12),transparent 28%),linear-gradient(180deg,#252733,var(--bg) 170px)}
+body{background:radial-gradient(circle at top right,rgba(189,147,249,.12),transparent 28%),linear-gradient(180deg,#282a36,var(--bg) 170px)}
 .fullscreen-panel{width:100%;min-width:0;margin:0;padding:23px 26px 50px}
 .panel-title{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;padding:8px 0 22px}
-.brand{display:flex;align-items:center;gap:14px}.logo-frame{width:58px;height:58px;display:grid;place-items:center;border:1px solid rgba(189,147,249,.34);border-radius:15px;background:linear-gradient(145deg,#393c50,#222432);box-shadow:0 8px 22px rgba(0,0,0,.24)}.logo-frame img{width:44px;height:44px}
+.brand{display:flex;align-items:center;gap:14px}.logo-frame{width:58px;height:58px;display:grid;place-items:center;border:1px solid rgba(189,147,249,.34);border-radius:15px;background:linear-gradient(145deg,#44475a,#282a36);box-shadow:0 8px 22px rgba(0,0,0,.24)}.logo-frame img{width:44px;height:44px}
 .eyebrow{color:var(--cyan);font-size:12px;font-weight:800;letter-spacing:.15em;text-transform:uppercase}h1{font-size:27px;line-height:1.2;margin:3px 0 0}
-.btn-refresh{padding:10px 14px;border-radius:10px;border:1px solid rgba(98,114,164,.45);background:linear-gradient(#36384a,#2a2d3c);color:var(--text);text-decoration:none;font:700 14px system-ui;cursor:pointer}
+.btn-refresh{padding:10px 14px;border-radius:10px;border:1px solid rgba(98,114,164,.45);background:#44475a;color:var(--text);text-decoration:none;font:700 14px system-ui;cursor:pointer}
 .media-status-list{display:flex;flex-direction:column;gap:14px}.section-header{margin:12px 0 0;padding:0 2px;color:var(--cyan);text-transform:uppercase;letter-spacing:.1em;font-size:13px;font-weight:800}
 .section-header.inprogress{color:var(--warn)}.section-header.upnext{color:var(--good)}
-.media-row{border:1px solid rgba(98,114,164,.28);border-radius:14px;padding:18px;background:linear-gradient(180deg,rgba(52,55,70,.3),rgba(33,34,44,.98));box-shadow:0 12px 28px rgba(0,0,0,.18)}
+.media-row{border:1px solid rgba(98,114,164,.28);border-radius:14px;padding:18px;background:#282a36;box-shadow:0 12px 28px rgba(0,0,0,.18)}
 .media-title-area{display:flex;align-items:flex-start;gap:12px;font-size:17px;margin-bottom:5px}.media-title-area i{margin-top:4px}.file-path-subtext{display:block;color:var(--muted);font:13px/1.5 ui-monospace,Consolas,monospace;overflow-wrap:anywhere;margin-top:4px}
 .platform-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:17px;min-width:0}
-.platform-badge{border:1px solid rgba(98,114,164,.25);border-top:3px solid var(--platform);border-radius:9px;background:#1b1d28;padding:12px;min-width:0}
+.platform-badge{border:1px solid rgba(98,114,164,.25);border-top:3px solid var(--platform);border-radius:9px;background:#282a36;padding:12px;min-width:0}
 .badge-plex{--platform:#e5a93b}.badge-kodi{--platform:#1cbdff}.badge-jellyfin{--platform:#a855f7}
 .platform-badge i{color:var(--platform)}.badge-value{display:block;margin-top:4px;font-size:16px;font-weight:700}.timestamp-val{color:var(--muted);font:13px ui-monospace,Consolas,monospace}
 .status-tag{display:inline-block;margin-top:8px;padding:4px 8px;border-radius:99px;font-size:12px}
-.progress-wrapper{height:6px;border-radius:10px;background:#343746;overflow:hidden;margin-top:9px}.progress-bar{height:100%;border-radius:10px;background:var(--platform)}
+.progress-wrapper{height:6px;border-radius:10px;background:#44475a;overflow:hidden;margin-top:9px}.progress-bar{height:100%;border-radius:10px;background:var(--platform)}
 @media(max-width:720px){.platform-grid{grid-template-columns:1fr}.fullscreen-panel{padding:16px}.panel-title{align-items:flex-start}h1{font-size:23px}}
 
 /* Shared dashboard chrome and iframe-safe content sizing. */
 html,body{width:100%;min-width:0}
-.page-top{display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap;padding:19px 26px;border-bottom:1px solid #44475a;background:rgba(33,34,44,.94)}
+.page-top{display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap;padding:19px 26px;border-bottom:1px solid #44475a;background:rgba(40,42,54,.94)}
 .page-top .brand{min-width:0}
 .page-actions,.page-nav{display:flex;align-items:center;gap:9px;flex-wrap:wrap}
-.page-actions button,.status-dialog button{padding:9px 13px;border:1px solid rgba(98,114,164,.5);border-radius:10px;background:linear-gradient(#36384a,#2a2d3c);color:var(--text);font:700 14px system-ui;cursor:pointer}
+.page-actions button,.status-dialog button{padding:9px 13px;border:1px solid rgba(98,114,164,.5);border-radius:10px;background:#44475a;color:var(--text);font:700 14px system-ui;cursor:pointer}
 .page-actions button{margin:0;min-height:40px}
-.page-actions button.primary{background:linear-gradient(#c49dff,#a57bf6);border-color:#c49dff;color:#171720}
-.page-actions .danger{color:#ffb6b6}
+.page-actions button.primary{background:#bd93f9;border-color:#bd93f9;color:#282a36}
+.page-actions .danger{color:#ff5555}
 .page-actions .subtle{background:transparent}
-.page-nav{padding:11px 26px;gap:6px;border-bottom:1px solid rgba(98,114,164,.3);background:rgba(31,33,48,.68)}
+.page-nav{padding:11px 26px;gap:6px;border-bottom:1px solid rgba(98,114,164,.3);background:rgba(40,42,54,.68)}
 .page-nav a{display:inline-block;border-radius:8px;padding:8px 13px;color:var(--muted);text-decoration:none;font-size:14px;font-weight:700}
-.page-nav a:hover,.page-nav a[aria-current="page"]{background:#3a3b52;color:var(--text)}
+.page-nav a:hover,.page-nav a[aria-current="page"]{background:#44475a;color:var(--text)}
 .page-nav a[aria-current="page"]{box-shadow:inset 0 -2px 0 var(--purple)}
-.status-dialog{width:min(720px,calc(100vw - 32px));max-height:80vh;overflow:auto;border:1px solid #6272a4;border-radius:14px;background:#21222c;color:var(--text);padding:20px}
+.status-dialog{width:min(720px,calc(100vw - 32px));max-height:80vh;overflow:auto;border:1px solid #6272a4;border-radius:14px;background:#282a36;color:var(--text);padding:20px}
 .status-dialog::backdrop{background:rgba(0,0,0,.65)}
-.status-dialog pre{max-width:100%;overflow:auto;padding:14px;border-radius:9px;background:#181922;font:13px/1.5 ui-monospace,Consolas,monospace}
+.status-dialog pre{max-width:100%;overflow:auto;padding:14px;border-radius:9px;background:#282a36;font:13px/1.5 ui-monospace,Consolas,monospace}
 .status-dialog .dialog-actions{display:flex;justify-content:flex-end;gap:8px}
 @media(max-width:560px){.page-top,.page-nav{padding-left:16px;padding-right:16px}.page-top h1{font-size:23px}}
+
+/* Shared Dracula Classic page chrome. Platform accent colors remain unchanged. */
+.page-top{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;padding:16px 24px;background:#282a36;border-bottom:1px solid #44475a}
+.page-top .brand{min-width:0;flex:0 1 auto}
+.page-top h1{font-size:clamp(17px,2vw,23px);line-height:1.2;margin:0;color:#f8f8f2;letter-spacing:.04em}
+.page-top .page-actions{display:flex;align-items:center;justify-content:flex-end;gap:6px;flex:1 1 360px;min-width:0;flex-wrap:wrap}
+.page-top .page-actions a,.page-top .page-actions button{display:inline-flex;align-items:center;justify-content:center;min-height:36px;padding:7px 11px;margin:0;border:1px solid transparent;border-radius:8px;background:transparent;color:#f8f8f2;text-decoration:none;font:700 13px system-ui;white-space:nowrap;cursor:pointer}
+.page-top .page-actions a[aria-current='page'],.page-top .page-actions a:hover{background:#44475a;box-shadow:inset 0 -2px #bd93f9}
+.page-top .page-actions .primary{background:#bd93f9;color:#282a36;border-color:#bd93f9}
+.page-top .page-actions .danger{color:#ff5555;border-color:#44475a}
+.page-top .logo-frame{background:#44475a;border-color:#6272a4;box-shadow:none}
+@media(max-width:700px){.page-top{padding:14px 16px}.page-top .page-actions{justify-content:flex-start;flex-basis:100%}}
+
+/* Compact platform cards retain the Plex, Kodi, and Jellyfin accent colors. */
+.media-title-area{margin-bottom:0;min-width:0}
+.media-title-area strong{overflow-wrap:anywhere}
+.media-row{padding:15px 18px}
+.platform-grid{margin-top:12px;gap:10px}
+.platform-badge{padding:9px 12px;min-width:0}
+.platform-name{font-size:13px;font-weight:700}
+.platform-time{font-size:15px;font-weight:700;margin-top:4px;white-space:nowrap}
+.platform-time span{font-weight:500;color:#6272a4}
+.progress-wrapper{margin-top:7px}
+.section-header{display:flex;align-items:center;gap:8px;padding:0 2px;margin:16px 0 0;font-size:13px}
+@media(max-width:720px){.platform-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.platform-time{font-size:13px}}
+@media(max-width:500px){.platform-grid{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
 
-<header class="page-top"><div class="brand"><div class="logo-frame"><img src="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2232%22%20height%3D%2232%22%20viewBox%3D%220%200%2032%2032%22%20role%3D%22img%22%20aria-labelledby%3D%22title%22%3E%0A%20%20%3Ctitle%20id%3D%22title%22%3EPlex%20Kodi%20Jellyfin%20Sync%20icon%3C%2Ftitle%3E%0A%20%20%3Crect%20width%3D%2232%22%20height%3D%2232%22%20rx%3D%227%22%20fill%3D%22%23101827%22%2F%3E%0A%20%20%3Ccircle%20cx%3D%2216%22%20cy%3D%2216%22%20r%3D%2211.3%22%20fill%3D%22none%22%20stroke%3D%22%23253247%22%20stroke-width%3D%223%22%2F%3E%0A%20%20%3Cpath%20d%3D%22M16%204.7a11.3%2011.3%200%200%201%209.8%205.65%22%20fill%3D%22none%22%20stroke%3D%22%23e5a72d%22%20stroke-width%3D%223%22%20stroke-linecap%3D%22round%22%2F%3E%0A%20%20%3Cpath%20d%3D%22M25.8%2021.65A11.3%2011.3%200%200%201%206.2%2021.65%22%20fill%3D%22none%22%20stroke%3D%22%238e69de%22%20stroke-width%3D%223%22%20stroke-linecap%3D%22round%22%2F%3E%0A%20%20%3Cpath%20d%3D%22M6.2%2010.35A11.3%2011.3%200%200%201%2011.6%205.6%22%20fill%3D%22none%22%20stroke%3D%22%2331a5df%22%20stroke-width%3D%223%22%20stroke-linecap%3D%22round%22%2F%3E%0A%20%20%3Cpath%20d%3D%22M13%2010.7%2021.5%2016%2013%2021.3Z%22%20fill%3D%22%23f5f8ff%22%2F%3E%0A%3C%2Fsvg%3E%0A" width="44" height="44" alt="Plex Kodi Jellyfin Sync logo"></div><div><div class="eyebrow">Plex · Kodi · Jellyfin</div><h1>Sync Dashboard</h1></div></div><div class="page-actions"><button type="button" class="primary" onclick="runSyncAction('sync')">Sync now</button><button type="button" class="danger" onclick="runSyncAction('reset')">Reset</button></div></header>
-<nav class="page-nav" aria-label="Pages"><a href="/" aria-current="page">Dashboard</a><a href="/logs">Logs</a><a href="/status-page">Status</a><a href="/env">Env</a></nav>
+<header class="page-top"><div class="brand"><div class="logo-frame"><img src="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2232%22%20height%3D%2232%22%20viewBox%3D%220%200%2032%2032%22%20role%3D%22img%22%20aria-labelledby%3D%22title%22%3E%0A%20%20%3Ctitle%20id%3D%22title%22%3EPlex%20Kodi%20Jellyfin%20Sync%20icon%3C%2Ftitle%3E%0A%20%20%3Crect%20width%3D%2232%22%20height%3D%2232%22%20rx%3D%227%22%20fill%3D%22%23101827%22%2F%3E%0A%20%20%3Ccircle%20cx%3D%2216%22%20cy%3D%2216%22%20r%3D%2211.3%22%20fill%3D%22none%22%20stroke%3D%22%23253247%22%20stroke-width%3D%223%22%2F%3E%0A%20%20%3Cpath%20d%3D%22M16%204.7a11.3%2011.3%200%200%201%209.8%205.65%22%20fill%3D%22none%22%20stroke%3D%22%23e5a72d%22%20stroke-width%3D%223%22%20stroke-linecap%3D%22round%22%2F%3E%0A%20%20%3Cpath%20d%3D%22M25.8%2021.65A11.3%2011.3%200%200%201%206.2%2021.65%22%20fill%3D%22none%22%20stroke%3D%22%238e69de%22%20stroke-width%3D%223%22%20stroke-linecap%3D%22round%22%2F%3E%0A%20%20%3Cpath%20d%3D%22M6.2%2010.35A11.3%2011.3%200%200%201%2011.6%205.6%22%20fill%3D%22none%22%20stroke%3D%22%2331a5df%22%20stroke-width%3D%223%22%20stroke-linecap%3D%22round%22%2F%3E%0A%20%20%3Cpath%20d%3D%22M13%2010.7%2021.5%2016%2013%2021.3Z%22%20fill%3D%22%23f5f8ff%22%2F%3E%0A%3C%2Fsvg%3E%0A" width="44" height="44" alt="Plex Kodi Jellyfin Sync logo"></div><div><h1>PLEX KODI JELLYFIN SYNC</h1></div></div><nav class="page-actions" aria-label="Pages"><a href="/" aria-current="page">Dashboard</a><a href="/logs">Logs</a><button type="button" class="primary" onclick="runSyncAction('sync')">Sync</button><a href="/status-page">Status</a><button type="button" class="danger" onclick="runSyncAction('reset')">Reset</button><a href="/env">Env</a></nav></header>
+
     <div class="fullscreen-panel">
         
         <div class="media-status-list" id="statusViewContainer">
-            <div style="color: #949eb4; text-align: center; padding: 100px 0; font-size: 1rem;">
-                <i class="fa-solid fa-circle-nodes" style="font-size: 2.5rem; margin-bottom:12px; display:block; color: #a855f7;"></i>
+            <div style="color: #6272a4; text-align: center; padding: 100px 0; font-size: 1rem;">
+                <i class="fa-solid fa-circle-nodes" style="font-size: 2.5rem; margin-bottom:12px; display:block; color: #bd93f9;"></i>
                 Querying media server resume status matrices...
             </div>
         </div>
@@ -102,30 +128,22 @@ html,body{width:100%;min-width:0}
         }
 
         function generatePlatformWidget(platformData, type, isEpisode) {
-            if (!platformData) {
-                return `
-                    <div class="platform-badge badge-${type}">
-                        <div><i class="${type === 'plex' ? 'fa-solid fa-server' : type === 'jellyfin' ? 'fa-solid fa-server' : 'fa-solid fa-server'}"></i> ${type.toUpperCase()}</div>
-                        <span class="status-tag" style="background: rgba(255,255,255,0.05); color: #6272a4; margin-top: auto;">Unlinked</span>
-                    </div>`;
-            }
-
+            const name = type === 'plex' ? 'Plex' : type === 'kodi' ? 'Kodi' : 'Jellyfin';
+            if (!platformData) return `<div class="platform-badge badge-${type}">
+                <div class="platform-name"><i class="fa-solid fa-server"></i> ${name}</div>
+                <div class="platform-time">Unlinked</div>
+                <div class="progress-wrapper"><div class="progress-bar bar-${type}" style="width:0%"></div></div>
+            </div>`;
             const isUnwatched = platformData.status === "unwatched" || !platformData.resume;
-            const pct = isUnwatched ? 0 : Math.min(100, ((platformData.resume / platformData.duration) * 100).toFixed(1));
-            const zeroProgressLabel = platformData.status === "watched" ? "Watched"
+            const duration = Number(platformData.duration) || 0;
+            const pct = isUnwatched || !duration ? 0 : Math.min(100, Math.max(0, Number(platformData.resume) / duration * 100));
+            const label = platformData.status === "watched" ? "Watched"
                 : isEpisode && platformData.status === "unwatched" ? "Up Next" : "Unwatched";
-            
-            return `
-                <div class="platform-badge badge-${type}">
-                    <div style="text-transform: capitalize; font-weight:600;"><i class="${type === 'plex' ? 'fa-solid fa-server' : type === 'jellyfin' ? 'fa-solid fa-server' : 'fa-solid fa-server'}"></i> ${type}</div>
-                    <div class="badge-value">${isUnwatched ? zeroProgressLabel : formatTime(platformData.resume)}</div>
-                    <div class="timestamp-val">of ${formatTime(platformData.duration)}</div>
-                    <div class="progress-wrapper">
-                        <div class="progress-bar bar-${type}" style="width: ${pct}%"></div>
-                    </div>
-                    <span class="timestamp-val" style="margin-top: 2px;">${pct}% Complete</span>
-                </div>
-            `;
+            return `<div class="platform-badge badge-${type}">
+                <div class="platform-name"><i class="fa-solid fa-server"></i> ${name}</div>
+                <div class="platform-time">${isUnwatched ? label : formatTime(platformData.resume)}<span>${duration ? " / " + formatTime(duration) : ""}</span></div>
+                <div class="progress-wrapper" role="progressbar" aria-label="${name} playback progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${Math.round(pct)}"><div class="progress-bar bar-${type}" style="width:${pct}%"></div></div>
+            </div>`;
         }
 
         function fetchStatus() {
@@ -185,7 +203,7 @@ html,body{width:100%;min-width:0}
 
                     const header = document.createElement("div");
                     header.className = `section-header ${cssClass}`;
-                    header.textContent = `${title} (${items.length})`;
+                    header.innerHTML = `<i class="fa-solid ${cssClass === "upnext" ? "fa-seedling" : "fa-circle-play"}" aria-hidden="true"></i><span>${title} (${items.length})</span>`;
 
                     container.appendChild(header);
 
@@ -207,11 +225,8 @@ html,body{width:100%;min-width:0}
                                 : 'fa-solid fa-film'}"
                                 style="color:#FF79C6;font-size:1.25rem;"></i>
 
-                                <div style="flex-grow:1;">
-                                    <strong>${displayTitle}</strong>
-                                    <span class="file-path-subtext">
-                                        ${rawPath}
-                                    </span>
+                                <div style="flex-grow:1;"><strong>${displayTitle}</strong>
+                                    
                                 </div>
 
                             </div>
@@ -234,14 +249,14 @@ html,body{width:100%;min-width:0}
 
 
                 renderSection(
-                    "In Progress",
+                    "Continue Watching | In Progress",
                     "inprogress",
                     inProgress
                 );
 
 
                 renderSection(
-                    "Up Next",
+                    "On Deck | Up Next",
                     "upnext",
                     upNext
                 );
