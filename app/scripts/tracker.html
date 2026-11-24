@@ -93,6 +93,12 @@ html,body{width:100%;min-width:0}
 .page-links a:focus-visible,.page-actions button:focus-visible{outline:2px solid #815cd6;outline-offset:3px}
 @media(max-width:1120px){.page-top{flex-wrap:wrap}.brand{width:100%}.page-links{justify-content:flex-start;margin-left:0}.page-actions{margin-left:auto}}
 @media(max-width:700px){.page-links,.page-actions{gap:7px}.page-links a,.page-actions button{min-height:38px;padding:8px 11px;font-size:13px}}
+
+/* Keep navigation and actions aligned to the right on every page, including wrapped headers. */
+.page-top .page-links{margin-left:auto;justify-content:flex-end}
+.page-top .page-actions{flex:0 0 auto;margin-left:16px;min-width:0;justify-content:flex-end}
+@media(max-width:1120px){.page-top .page-links{margin-left:auto;justify-content:flex-end}.page-top .page-actions{margin-left:16px;justify-content:flex-end}}
+@media(max-width:700px){.page-top .page-links{margin-left:auto;justify-content:flex-end}.page-top .page-actions{margin-left:auto;justify-content:flex-end}}
 </style>
 </head>
 <body>
