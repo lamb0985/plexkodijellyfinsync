@@ -6,6 +6,14 @@ Sync movie and TV playback progress and watched status among **Plex, Kodi, and J
 
 ![Sync icon](assets/icon.svg) Plex, Kodi, and Jellyfin use the same media files. The sync script matches items by relative media path, compares each platform against its previous snapshot, and applies a single detected change to the others. Conflicting changes are reported and left for review. On Deck / Up Next is reserved for unwatched TV episodes; an unwatched movie is not labeled Up Next.
 
+## Web UI
+
+- `/` is the playback Dashboard. **Continue Watching | In Progress** and **On Deck | Up Next** use compact Plex, Kodi, and Jellyfin cards with a single `current / duration` line and progress bar. Video file paths and duplicate percentage labels are omitted.
+- `/logs` contains live colored sync output, the command input, and Jump to latest. The log width continues to follow the available viewport width.
+- `/status-page` shows saved sync state; `/env` edits configuration. The JSON `/status` and `/api/logs` endpoints remain available. `/tracker` is no longer served.
+- Every page displays the logo and **PLEX KODI JELLYFIN SYNC**, followed by Dashboard, Logs, Sync, Status, Reset, and Env controls in that order. The controls wrap in narrow Organizr frames.
+- The interface uses the Dracula Classic palette for backgrounds, text, borders, and controls. Plex, Kodi, and Jellyfin retain their existing platform accent colors.
+
 ## Connections
 
 | Platform | Authentication and read/write methods |
