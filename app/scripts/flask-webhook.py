@@ -196,6 +196,11 @@ def ui_theme():
     response.headers["Cache-Control"] = "no-cache"
     return response
 
+@app.route("/brand-banner.png", methods=["GET"])
+def brand_banner():
+    image = (Path(__file__).resolve().parent / "brand-banner.png").read_bytes()
+    return Response(image, mimetype="image/png")
+
 @app.route("/ui-modal.js", methods=["GET"])
 def ui_modal():
     script = (Path(__file__).resolve().parent / "webui-modal.js").read_text(encoding="utf-8")

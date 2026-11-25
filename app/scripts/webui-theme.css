@@ -210,3 +210,16 @@ body.ui-dialog-open { overflow:hidden; }
 .embedded-modal .page-status main, .embedded-modal .page-env main { padding:18px; }
 .embedded-modal .status-card, .embedded-modal .page-env .card { border:0; padding:0; box-shadow:none; }
 @media(max-width:560px) { .ui-dialog { max-height:calc(100vh - 20px); } .ui-dialog-frame,.env-dialog .ui-dialog-frame { height:calc(100vh - 100px); } }
+
+/* Supplied project banner replaces the old icon and text on every page. */
+.page-top, .pkjs-app .top { padding-top:12px; padding-bottom:12px; }
+.page-top .brand-banner, .pkjs-app .top .brand-banner {
+  display:block; flex:0 1 520px; width:min(520px,100%); min-width:0;
+  line-height:0; border-radius:12px; overflow:hidden;
+}
+.brand-banner img { display:block; width:100%; height:auto; max-width:100%; }
+.brand-banner:focus-visible { outline:2px solid #bd93f9; outline-offset:3px; }
+@media(max-width:1120px) {
+  .page-top .brand-banner, .pkjs-app .top .brand-banner { flex:0 0 100%; width:100%; }
+  .brand-banner img { max-width:520px; }
+}

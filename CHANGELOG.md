@@ -2,6 +2,13 @@
 
 Changes are listed here with links to the corresponding GitHub commits. This file starts with the restored single-script release; earlier history is available in [GitHub's commit history](https://github.com/lamb0985/plexkodijellyfinsync/commits/main).
 
+## 2026-11-24 — Use project banner in every header
+
+- Replace the small icon and text title on Dashboard, Logs, Status, and Env with the supplied banner image.
+- Make the banner open the project's GitHub home page in a new tab; scale it without cropping in narrow frames.
+
+Rollback: `05f3d8f96aaecc7c718a5586452b0304f40775db` (`rollback/pre-banner-header-20261124`).
+
 ## 2026-11-24 — Compact Dashboard and popup settings
 
 - Put media titles alongside Plex, Kodi, and Jellyfin progress on wide screens; stack the row in narrow Organizr frames.
