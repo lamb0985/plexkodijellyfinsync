@@ -186,7 +186,7 @@ html,body{margin:0;min-height:100%;background:#282a36}
 @media(max-width:560px){.pkjs-app .top .logo-frame{width:58px;height:58px}.pkjs-app .top .logo-frame img{width:44px;height:44px}}
 </style><link rel="stylesheet" href="/ui-theme.css"></head><body class="page-logs">
 <div class="pkjs-app">
-<header class="top"><a class="brand brand-banner" href="https://github.com/lamb0985/plexkodijellyfinsync" target="_blank" rel="noopener noreferrer" aria-label="Plex Kodi Jellyfin Sync on GitHub (opens in a new tab)"><img src="/brand-banner.png" width="1200" height="320" alt="Plex Kodi Jellyfin — three-way sync, one watch state wherever you press play"></a><nav class="page-links" aria-label="Pages"><a href="/dashboard">Dashboard</a><a href="/logs" aria-current="page">Logs</a><a href="/status-page">Status</a><a href="/env">Env</a></nav><div class="page-actions" aria-label="Actions"><button type="button" class="primary" onclick="syncNow()">Sync</button><button type="button" class="danger" onclick="resetSync()">Reset</button></div></header>
+<header class="top"><a class="brand brand-banner" href="https://github.com/lamb0985/plexkodijellyfinsync" target="_blank" rel="noopener noreferrer" aria-label="Plex Kodi Jellyfin Sync on GitHub (opens in a new tab)"><img src="/brand-banner.png" width="1200" height="320" alt="Plex Kodi Jellyfin — three-way sync, one watch state wherever you press play"></a><div class="sync-summary" aria-label="Sync summary"><div class="stat-card"><span class="stat-label">CONTINUE WATCHING</span><strong class="stat-value" data-summary="progress">—</strong><span class="stat-caption">In progress</span></div><div class="stat-card"><span class="stat-label">ON DECK</span><strong class="stat-value" data-summary="next">—</strong><span class="stat-caption">Episodes up next</span></div><div class="stat-card aligned"><span class="stat-label">PLATFORMS ALIGNED</span><strong class="stat-value" data-summary="aligned">—</strong><span class="stat-caption">Saved items match</span></div></div><div class="header-controls"><nav class="page-links" aria-label="Pages"><a href="/dashboard">Dashboard</a><a href="/logs" aria-current="page">Logs</a><a href="/status-page">Status</a><a href="/env">Env</a></nav><div class="page-actions" aria-label="Actions"><button type="button" class="primary" onclick="syncNow()">Sync</button><button type="button" class="danger" onclick="resetSync()">Reset</button></div></div></header>
 
 <main>
 <section class="card"><div class="log-head"><span class="label">Live Logs</span><button class="text-button" type="button" onclick="document.getElementById('terminal').scrollTop=document.getElementById('terminal').scrollHeight">Jump to latest</button></div><div id="terminal" class="log" role="log" aria-live="off">Connecting to logs…</div></section>
@@ -320,6 +320,7 @@ html,body{margin:0;min-height:100%;background:#282a36}
  function syncNow() { fetch('/sync?columns=' + logColumns(), { credentials: 'include' }).then(() => setTimeout(refreshLog, 250)); }
  function resetSync() { fetch('/reset?columns=' + logColumns(), { credentials: 'include' }).then(() => setTimeout(refreshLog, 250)); }
  </script>
- <script src="/ui-modal.js"></script>
+ <script src="/webui-summary.js"></script>
+<script src="/ui-modal.js"></script>
 </body>
 </html>

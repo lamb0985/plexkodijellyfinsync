@@ -2,6 +2,14 @@
 
 Changes are listed here with links to the corresponding GitHub commits. This file starts with the restored single-script release; earlier history is available in [GitHub's commit history](https://github.com/lamb0985/plexkodijellyfinsync/commits/main).
 
+## 2026-11-24 — Add live sync summary to shared header
+
+- Place Continue Watching, On Deck, and Platforms Aligned counts between the linked banner and controls on Dashboard, Logs, Status, and Env. The counts read the existing `/status` saved state, refresh while the page is visible, and use the Dashboard's in-progress and up-next criteria.
+- Wrap the header sections in narrower Organizr frames without horizontal clipping. Keep media platform colors and log formatting unchanged.
+- Render Dashboard media type icons in Dracula white rather than pink.
+
+Rollback: `a6545e36481f030d686645a268ca7a7fe333f32c` (`rollback/pre-header-summary-20261124`). The previous Docker image remains available as `lamb0985/plexkodijellyfinsync:sha-a6545e36481f030d686645a268ca7a7fe333f32c`.
+
 ## 2026-11-24 — Use project banner in every header
 
 - Replace the small icon and text title on Dashboard, Logs, Status, and Env with the supplied banner image.
