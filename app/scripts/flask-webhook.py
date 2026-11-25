@@ -196,6 +196,13 @@ def ui_theme():
     response.headers["Cache-Control"] = "no-cache"
     return response
 
+@app.route("/ui-modal.js", methods=["GET"])
+def ui_modal():
+    script = (Path(__file__).resolve().parent / "webui-modal.js").read_text(encoding="utf-8")
+    response = Response(script, mimetype="application/javascript")
+    response.headers["Cache-Control"] = "no-cache"
+    return response
+
 @app.route("/status-page", methods=["GET"])
 def status_page():
     try:

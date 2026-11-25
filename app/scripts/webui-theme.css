@@ -149,3 +149,64 @@ body, body:has(.pkjs-app) { background: var(--ui-bg); }
   .platform-badge { grid-template-columns: 72px 1fr; }
   .platform-badge .progress-wrapper { grid-column: 1 / -1; }
 }
+
+/* Shared header depth and log-matched platform colors. */
+.plex-word, .badge-plex { --platform: #f1fa8c; }
+.kodi-word, .badge-kodi { --platform: #8be9fd; }
+.jellyfin-word, .badge-jellyfin { --platform: #bd93f9; }
+.plex-word { color: #f1fa8c; }
+.kodi-word { color: #8be9fd; }
+.jellyfin-word { color: #bd93f9; }
+.sync-word, .pkjs-app .sync-word { color: #f8f8f2; }
+.page-top .page-links a, .pkjs-app .top .page-links a,
+.page-top .page-actions button, .pkjs-app .top .page-actions button {
+  border-color: #6272a4; background: linear-gradient(#45485c,#343746);
+  box-shadow: inset 0 1px rgba(248,248,242,.13), 0 3px 8px rgba(0,0,0,.26);
+}
+.page-top .page-links a:hover, .page-top .page-links a[aria-current="page"],
+.pkjs-app .top .page-links a:hover, .pkjs-app .top .page-links a[aria-current="page"] {
+  border-color: #caaaf9; background: linear-gradient(#bd93f9,#9871d9);
+  color: #21222c; box-shadow: inset 0 1px rgba(255,255,255,.35), 0 3px 10px rgba(123,72,192,.24);
+}
+.page-top .page-actions button.primary, .pkjs-app .top .page-actions button.primary {
+  border-color: #7bffa0; background: linear-gradient(#65ff8b,#42d86a);
+  box-shadow: inset 0 1px rgba(255,255,255,.35), 0 3px 10px rgba(36,160,72,.25);
+}
+.page-top .page-actions button.danger, .pkjs-app .top .page-actions button.danger {
+  border-color: #b95a67; background: linear-gradient(#4b3b43,#342c36);
+  color: #ff7b7b; box-shadow: inset 0 1px rgba(255,255,255,.1), 0 3px 8px rgba(0,0,0,.26);
+}
+
+/* Keep titles and platforms in one desktop row; stack at iframe widths. */
+.media-row { display:grid; grid-template-columns:minmax(260px,2fr) repeat(3,minmax(150px,1fr)); gap:20px; align-items:center; }
+.media-title-area { min-width:0; }
+.platform-grid { display:contents; }
+.platform-badge { min-width:0; }
+@media(max-width:850px) {
+  .media-row { grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px; }
+  .media-title-area { grid-column:1/-1; }
+}
+@media(max-width:560px) {
+  .media-row { grid-template-columns:1fr; }
+  .media-title-area { grid-column:1; }
+}
+
+/* Plex EPG inspired dialogs, with existing Status and Env endpoints inside. */
+body.ui-dialog-open { overflow:hidden; }
+.ui-dialog { width:min(880px,calc(100% - 28px)); max-width:none; max-height:calc(100vh - 48px); padding:0;
+  border:1px solid rgba(189,147,249,.4); border-radius:16px; background:linear-gradient(#2d3040,#21222c);
+  color:#f8f8f2; box-shadow:0 24px 80px rgba(0,0,0,.56); overflow:hidden; }
+.ui-dialog.env-dialog { width:min(1040px,calc(100% - 28px)); }
+.ui-dialog::backdrop { background:rgba(10,10,16,.78); backdrop-filter:blur(7px); }
+.ui-dialog-head { display:flex; align-items:center; justify-content:space-between; padding:16px 20px; border-bottom:1px solid #44475a; }
+.ui-dialog-head h2 { margin:0; font-size:20px; }
+.ui-dialog-close { width:36px; height:36px; border:1px solid #6272a4; border-radius:9px;
+  background:linear-gradient(#45485c,#343746); color:#f8f8f2; font-size:22px; cursor:pointer; }
+.ui-dialog-frame { display:block; width:100%; height:min(70vh,690px); border:0; background:#21222c; }
+.env-dialog .ui-dialog-frame { height:min(78vh,790px); }
+.embedded-modal .page-top { display:none; }
+.embedded-modal .pkjs-app .top { display:none; }
+.embedded-modal body, .embedded-modal .pkjs-app { background:#21222c; }
+.embedded-modal .page-status main, .embedded-modal .page-env main { padding:18px; }
+.embedded-modal .status-card, .embedded-modal .page-env .card { border:0; padding:0; box-shadow:none; }
+@media(max-width:560px) { .ui-dialog { max-height:calc(100vh - 20px); } .ui-dialog-frame,.env-dialog .ui-dialog-frame { height:calc(100vh - 100px); } }

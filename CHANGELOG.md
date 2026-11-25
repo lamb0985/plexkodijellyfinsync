@@ -2,6 +2,15 @@
 
 Changes are listed here with links to the corresponding GitHub commits. This file starts with the restored single-script release; earlier history is available in [GitHub's commit history](https://github.com/lamb0985/plexkodijellyfinsync/commits/main).
 
+## 2026-11-24 — Compact Dashboard and popup settings
+
+- Put media titles alongside Plex, Kodi, and Jellyfin progress on wide screens; stack the row in narrow Organizr frames.
+- Match platform accents to the Logs ANSI palette: Plex yellow, Kodi cyan, Jellyfin purple. Show SYNC in white.
+- Give the same navigation and action buttons depth on all four pages.
+- Open Status and Env in dialogs from the header. Keep their existing endpoints, status polling, .env form, CSRF and conflict checks available directly and inside dialogs.
+
+Rollback: `347347f4ccf77fe94a9c92262bd57501f7eec9f6` (`rollback/pre-compact-popups-20261124`).
+
 ## 2026-11-23 — Refine Dashboard and Web UI surfaces
 
 ### Changed
